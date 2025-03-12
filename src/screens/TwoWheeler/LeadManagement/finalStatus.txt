@@ -1,0 +1,24 @@
+
+Existing terminologies	Proposed Terminologies
+Bre1_Approved=	Stage 1 Approved
+Bre1_Manual= Data Entry1 Manual (Stage 1 Manual)	Stage 1 Manual
+Bre1_Rejected= STP Rejected (Stage 1 STP Reject)	Stage 1 STP Reject
+Bre2_Approved= Data Entry2 Approved (Stage 2 Approved)	Stage 2 Approved
+Bre2_Manual= Data Entry2 Manual Stage 2 Manual	Stage 2 Manual
+Bre2_Rejected=  STP Rejected Stage 2 STP Reject)	Stage 2 STP Reject
+Bre3_Approved= STP Approved	STP Approved
+Bre3_Manual= Credit Pending	Credit Pending
+ se_on_Hold= Credit Hold	Credit Hold
+Credit_Approved= Credit Approved	Credit Approved
+Credit_Rejected= Credit Rejected	Credit Rejected
+demography_inprogress= Incomplete Application	Incomplete Application
+Disbursement_In_Query= Ops Query	Ops Query
+Disbursement_Query_Resolved= Ops Query Resolved	Ops Query Resolved
+Fi_In_Query= Fi Initiated	FI initiated
+Fi_Query_Resolved= Fi Completed	FI Completed
+In_Query= In Credit Query 	In Credit Query
+Query_Resolved= Credit Query Resolved	Credit Query Resolved
+Sales_Rejected= Sales Rejected 	Sales Rejected
+Submit_to_disbursement= Ops Pending	Ops Pending
+Submit_to_LMS= Disbursed	Disbursed
+
