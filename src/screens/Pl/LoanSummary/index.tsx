@@ -432,7 +432,7 @@ const LoanSummary: FC<LoanSummaryScreenProps> = ({ navigation, route }) => {
     ),
   ];
 
-  console.log("rrrrrrrr", isLoading);
+  // console.log("rrrrrrrr", isLoading);
 
   return (
     <WaveBackground isMasterApp={JSON.parse(masterLogin)} loading={[

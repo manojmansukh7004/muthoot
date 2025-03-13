@@ -53,7 +53,7 @@ export const Lead: LeadType = {
     type
   ): Promise<ApiResponse<ViewLeadsResponse>> => {
     try {
-      console.log("rrrrrr",type);
+      // console.log("rrrrrr",type);
       
       const response = await api.get(
         `${type == 'unAllocated' ? serviceUrls.UNALLOCATED_LEADS : serviceUrls.VIEW_LEADS}empId=${employeeId}&search=${search}`,

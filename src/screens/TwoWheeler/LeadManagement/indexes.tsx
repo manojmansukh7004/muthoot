@@ -156,22 +156,22 @@ const LeadManagement: FC<LeadManagementScreenProps> = ({navigation}) => {
   //   }, []),
   // );
 
-  useFocusEffect(
-    React.useCallback(() => {
-      if (Platform.OS === 'android') {
-        const onBackPress = () => {
-          navigation.replace('Dashboard');
-          return true;
-        };
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     if (Platform.OS === 'android') {
+  //       const onBackPress = () => {
+  //         navigation.replace('Dashboard');
+  //         return true;
+  //       };
   
-        BackHandler.addEventListener('hardwareBackPress', onBackPress);
+  //       BackHandler.addEventListener('hardwareBackPress', onBackPress);
   
-        return () => {
-          BackHandler.removeEventListener('hardwareBackPress', onBackPress);
-        };
-      }
-    }, [navigation]),
-  );
+  //       return () => {
+  //         BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+  //       };
+  //     }
+  //   }, [navigation]),
+  // );
 
   const renderRow = (item, index) => {
     return (
