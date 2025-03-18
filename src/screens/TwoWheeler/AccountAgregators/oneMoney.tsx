@@ -5,7 +5,7 @@ import WaveBackground from 'components/WaveBackground';
 import { useApplicantDetails } from 'context/useApplicantDetails';
 import { RootStackParamList } from 'navigation/HomeStack/TwoWheelerStack';
 import WebView from 'react-native-webview';
-import { BackHandler, Dimensions, View } from 'react-native';
+import { BackHandler, Dimensions, Platform, View } from 'react-native';
 import LoanSummaryButton from 'components/LoanSummaryButton';
 import Button from 'components/Button';
 import {
@@ -90,17 +90,39 @@ const OneMoney: FC<OneMoneyScreenProps> = ({ navigation, route }) => {
 
 
   }, []);
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     const onBackPress = () => {
+  //       navigation.navigate('ProductDetails');
+  //       return true;
+  //     };
+  //     BackHandler.addEventListener('hardwareBackPress', onBackPress);
+  //     return () =>
+  //       BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+  //   }, []),
+  // );
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => {
-        navigation.navigate('ProductDetails');
-        return true;
+        navigation.replace('ProductDetails'); // Replace current screen with Dashboard
+        return true; // Prevent default behavior (Android)
       };
-      BackHandler.addEventListener('hardwareBackPress', onBackPress);
-      return () =>
-        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
-    }, []),
+
+      if (Platform.OS === 'android') {
+        const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+        return () => backHandler.remove(); // ✅ Correct way in RN 0.78.0+
+      } else {
+        // Handle iOS back gesture using navigation listener
+        const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+          e.preventDefault(); // Prevent default back navigation
+          navigation.replace('ProductDetails'); // Navigate manually
+        });
+
+        return unsubscribe; // Remove event listener when unmounted
+      }
+    }, [navigation]),
   );
+
   return (
     <WaveBackground loading={[GetAADetailsIsLoading, ViewStatusIsLoading]} title={'Account Aggregator '}>
 

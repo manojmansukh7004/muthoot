@@ -144,34 +144,70 @@ const LeadManagement: FC<LeadManagementScreenProps> = ({navigation}) => {
     }, []),
   );
 
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     const onBackPress = () => {
-  //       navigation.replace('Dashboard');
-  //       return true;
-  //     };
-  //     BackHandler.addEventListener('hardwareBackPress', onBackPress);
-  //     return () =>
-  //       BackHandler.removeEventListener('hardwareBackPress', onBackPress);
-  //   }, []),
-  // );
 
   // useFocusEffect(
   //   React.useCallback(() => {
+  //     const onBackPress = () => {
+  //       navigation.replace('Dashboard'); // Replace current screen with Dashboard
+  //       return true; // Prevent default behavior (Android)
+  //     };
+
   //     if (Platform.OS === 'android') {
-  //       const onBackPress = () => {
-  //         navigation.replace('Dashboard');
-  //         return true;
-  //       };
-  
-  //       BackHandler.addEventListener('hardwareBackPress', onBackPress);
-  
-  //       return () => {
-  //         BackHandler.removeEventListener('hardwareBackPress', onBackPress);
-  //       };
+  //       const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+  //       return () => backHandler.remove(); // ✅ Correct way in RN 0.78.0+
+  //     } else {
+  //       // Handle iOS back gesture using navigation listener
+  //       const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+  //         e.preventDefault(); // Prevent default back navigation
+  //         navigation.replace('Dashboard'); // Navigate manually
+  //       });
+
+  //       return unsubscribe; // Remove event listener when unmounted
   //     }
   //   }, [navigation]),
   // );
+
+  //  useFocusEffect(
+  //       React.useCallback(() => {
+  //         if (Platform.OS === 'android') {
+  //           const onBackPress = () => {
+  //             navigation.replace('Dashboard');
+  //             return true;
+  //           };
+    
+  //           const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+    
+  //           return () => backHandler.remove(); // ✅ Correct way to remove listener in RN 0.78.0+
+  //         }
+  //       }, [navigation]),
+  //     );
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        navigation.navigate('Dashboard'); // 🔹 Always go back to "Dashboard"
+        return true;
+      };
+  
+      if (Platform.OS === 'android') {
+        const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+        return () => backHandler.remove(); // ✅ Cleanup
+      } else {
+        const onBeforeRemove = (e: any) => {
+          // Only intercept back navigation, not forward navigation
+          if (e.data.action.type === 'GO_BACK') {
+            e.preventDefault();
+            navigation.navigate('Dashboard'); // 🔹 Navigate directly
+          }
+        };
+  
+        navigation.addListener('beforeRemove', onBeforeRemove);
+  
+        return () => navigation.removeListener('beforeRemove', onBeforeRemove);
+      }
+    }, [navigation])
+  );
+
 
   const renderRow = (item, index) => {
     return (
@@ -525,7 +561,7 @@ const LeadManagement: FC<LeadManagementScreenProps> = ({navigation}) => {
                     console.log('kkkkkkkk', item);
 
                     SaveApplicantId(item.appId);
-                    navigation.replace('LoanSummary');
+                    navigation.navigate('LoanSummary');
                   }}
                   style={styles.tabularLayout}>
                   <Text style={styles.lableStyle}>{'Action'}</Text>
@@ -650,6 +686,7 @@ const LeadManagement: FC<LeadManagementScreenProps> = ({navigation}) => {
             ) ? (
               <FlatList
                 style={{flex: 1}}
+                keyboardDismissMode="on-drag" 
                 data={
                   selectedIndex === 0
                     ? ViewLeadsData

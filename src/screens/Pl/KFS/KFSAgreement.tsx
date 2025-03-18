@@ -4,7 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import WaveBackground from 'components/WaveBackground';
 import { RootStackParamList } from 'navigation/HomeStack/TwoWheelerStack';
 import WebView from 'react-native-webview';
-import { BackHandler, Dimensions } from 'react-native';
+import { BackHandler, Dimensions, Platform } from 'react-native';
 
 type KFSAgreementNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -28,17 +28,21 @@ const KFSAgreement: FC<KFSAgreementScreenProps> = ({ navigation, route }) => {
 
   }, []);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      const onBackPress = () => {
-        navigation.navigate('KFS');
-        return true;
-      };
-      BackHandler.addEventListener('hardwareBackPress', onBackPress);
-      return () =>
-        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
-    }, []),
-  );
+
+    useFocusEffect(
+      React.useCallback(() => {
+        if (Platform.OS === 'android') {
+          const onBackPress = () => {
+            navigation.replace('KFS');
+            return true;
+          };
+  
+          const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+  
+          return () => backHandler.remove(); // ✅ Correct way to remove listener in RN 0.78.0+
+        }
+      }, [navigation]),
+    );
   return (
     <WaveBackground loading={[]} title={'KFS Agreement'}>
 

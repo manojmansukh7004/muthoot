@@ -5,7 +5,7 @@ import WaveBackground from 'components/WaveBackground';
 import { useApplicantDetails } from 'context/useApplicantDetails';
 import { RootStackParamList } from 'navigation/HomeStack/TwoWheelerStack';
 import WebView from 'react-native-webview';
-import { BackHandler, Dimensions, View } from 'react-native';
+import { BackHandler, Dimensions, Platform, View } from 'react-native';
 import LoanSummaryButton from 'components/LoanSummaryButton';
 import Button from 'components/Button';
 import {
@@ -90,17 +90,24 @@ const OneMoney: FC<OneMoneyScreenProps> = ({ navigation, route }) => {
 
 
   }, []);
-  useFocusEffect(
-    React.useCallback(() => {
-      const onBackPress = () => {
-        navigation.navigate('ProductDetails');
-        return true;
-      };
-      BackHandler.addEventListener('hardwareBackPress', onBackPress);
-      return () =>
-        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
-    }, []),
-  );
+
+    useFocusEffect(
+      React.useCallback(() => {
+        if (Platform.OS === 'android') {
+          const onBackPress = () => {
+            navigation.replace('ProductDetails');
+            return true;
+          };
+  
+          const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+  
+          return () => backHandler.remove(); // ✅ Correct way to remove listener in RN 0.78.0+
+        }
+      }, [navigation]),
+    );
+
+    
+
   return (
     <WaveBackground loading={[GetAADetailsIsLoading, ViewStatusIsLoading]} title={'Account Aggregator '}>
 

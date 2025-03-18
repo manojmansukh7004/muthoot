@@ -347,6 +347,7 @@ const DeviationDocuments: FC<DeviationDocumentsScreenProps> = ({
       </ScrollView>}
 
       <FlatList
+      keyboardDismissMode="on-drag" 
         data={preDocumentsDetails}
         extraData={preDocumentsDetails}
         style={{}}

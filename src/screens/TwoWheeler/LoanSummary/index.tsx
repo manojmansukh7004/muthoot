@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
-import { Text, View, ScrollView, TouchableOpacity, BackHandler } from 'react-native';
+import { Text, View, ScrollView, TouchableOpacity, BackHandler, Platform } from 'react-native';
 import { RouteProp, useFocusEffect } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useGetCKYCStatus } from 'api/ReactQuery/TwoWheeler/CKYC';
@@ -355,27 +355,74 @@ const LoanSummary: FC<LoanSummaryScreenProps> = ({ navigation, route }) => {
     },
   ];
 
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     const getMasterLogin = async () => {
+  //       const value = await AsyncStorage.getItem('ismasterLogin');
+  //       console.log("mmmmmm&&&&&&&&&&&&&&&&mm", value);
+  //       setMasterLogin(value);
+  //     };
+
+  //     getMasterLogin();
+  //     const onBackPress = async () => {
+  //       await AsyncStorage.getItem('ismasterLogin') == 'true' ?
+  //         navigation.navigate('Dashboard')
+  //         :
+  //         navigation.navigate('LeadManagement')
+  //       return true;
+  //     };
+  //     BackHandler.addEventListener('hardwareBackPress', onBackPress);
+  //     return () =>
+  //       BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+  //   }, []),
+  // );
+
   useFocusEffect(
-    React.useCallback(() => {
-      const getMasterLogin = async () => {
-        const value = await AsyncStorage.getItem('ismasterLogin');
-        console.log("mmmmmm&&&&&&&&&&&&&&&&mm", value);
-        setMasterLogin(value);
+  React.useCallback(() => {
+    const getMasterLogin = async () => {
+      const value = await AsyncStorage.getItem('ismasterLogin');
+      console.log("Master Login Status:", value);
+      setMasterLogin(value);
+    };
+
+    getMasterLogin();
+
+    const onBackPress = () => {
+      if (masterLogin === 'true') {
+        navigation.navigate('Dashboard');
+      } else {
+        navigation.navigate('LeadManagement');
+      }
+      return true;
+    };
+
+    if (Platform.OS === 'android') {
+      const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+      return () => backHandler.remove(); // ✅ Cleanup
+    } else {
+      console.log("mjjjjj");
+      
+      const onBeforeRemove = (e: any) => {
+        if (e.data.action.type === 'GO_BACK') {
+          e.preventDefault();
+          if (masterLogin === 'true') {
+            console.log("iiiiiii");
+
+            navigation.navigate('Dashboard');
+          } else {
+            console.log("eeeeee");
+            navigation.dispatch(e.data.action); 
+            // navigation.navigate('LeadManagement');
+          }
+        }
       };
 
-      getMasterLogin();
-      const onBackPress = async () => {
-        await AsyncStorage.getItem('ismasterLogin') == 'true' ?
-          navigation.navigate('Dashboard')
-          :
-          navigation.navigate('LeadManagement')
-        return true;
-      };
-      BackHandler.addEventListener('hardwareBackPress', onBackPress);
-      return () =>
-        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
-    }, []),
-  );
+      navigation.addListener('beforeRemove', onBeforeRemove);
+      return () => navigation.removeListener('beforeRemove', onBeforeRemove);
+    }
+  }, [masterLogin, navigation])
+);
+
 
   useEffect(() => {
     if (memoizedCKYCStatusData) {
@@ -450,7 +497,7 @@ const LoanSummary: FC<LoanSummaryScreenProps> = ({ navigation, route }) => {
       ViewStatusIsLoading, GetCKYCStatusDataIsLoading, GetSanctionLetterDetailsIsLoading,
       isLoading]} title={'Loan Summary'}>
 
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} keyboardDismissMode="on-drag" >
       <SessionExpiredPopup/>
 
         <View style={[styles.container]}>

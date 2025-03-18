@@ -6,6 +6,7 @@ import {
   Animated,
   TouchableOpacity,
   BackHandler,
+  Platform,
 } from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useFocusEffect} from '@react-navigation/native';
@@ -64,18 +65,41 @@ const ManualUnderwriting: FC<ManualUnderwritingScreenProps> = ({
     ).start();
   };
 
-  useEffect(() => {
-    const onBackPress = () => {
-      navigation.navigate('LoanDetails');
-      return true;
-    };
-    if (isNavigateLoanOffer) {
-      BackHandler.addEventListener('hardwareBackPress', onBackPress);
-      return () => {
-        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
-      };
-    }
-  }, []);
+  // useEffect(() => {
+  //   const onBackPress = () => {
+  //     navigation.navigate('LoanDetails');
+  //     return true;
+  //   };
+  //   if (isNavigateLoanOffer) {
+  //     BackHandler.addEventListener('hardwareBackPress', onBackPress);
+  //     return () => {
+  //       BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+  //     };
+  //   }
+  // }, []);
+
+   useFocusEffect(
+      React.useCallback(() => {
+        const onBackPress = () => {
+          navigation.replace('LoanDetails'); // Replace current screen with Dashboard
+          return true; // Prevent default behavior (Android)
+        };
+  
+        if (Platform.OS === 'android') {
+          const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+          return () => backHandler.remove(); // ✅ Correct way in RN 0.78.0+
+        } else {
+          // Handle iOS back gesture using navigation listener
+          const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+            e.preventDefault(); // Prevent default back navigation
+            navigation.replace('LoanDetails'); // Navigate manually
+          });
+  
+          return unsubscribe; // Remove event listener when unmounted
+        }
+      }, [navigation]),
+    );
+  
 
   useEffect(() => {
     startAnimation();

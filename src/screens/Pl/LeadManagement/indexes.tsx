@@ -11,6 +11,7 @@ import {
   Dimensions,
   BackHandler,
   Image,
+  Platform,
 } from 'react-native';
 import { ConvertToPrefixedAmount } from 'config/Functions/ConvertToPrefix';
 
@@ -104,17 +105,23 @@ const LeadManagement: FC<LeadManagementScreenProps> = ({ navigation }) => {
     }, []),
   );
 
-  useFocusEffect(
-    React.useCallback(() => {
-      const onBackPress = () => {
-        navigation.replace('Dashboard');
-        return true;
-      };
-      BackHandler.addEventListener('hardwareBackPress', onBackPress);
-      return () =>
-        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
-    }, []),
-  );
+ 
+    useFocusEffect(
+      React.useCallback(() => {
+        if (Platform.OS === 'android') {
+          const onBackPress = () => {
+            navigation.replace('Dashboard');
+            return true;
+          };
+  
+          const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+  
+          return () => backHandler.remove(); // ✅ Correct way to remove listener in RN 0.78.0+
+        }
+        
+      }, [navigation]),
+    );
+    
   // const inputDateString = "2023-12-15T05:47:29.000+0000";
   // const inputMoment = moment.utc(inputDateString).format('DD-MM-YYYY h:mm A');
   // const formattedDate = inputMoment.format('DD-MM-YYYY h:mm A');
@@ -479,6 +486,7 @@ const LeadManagement: FC<LeadManagementScreenProps> = ({ navigation }) => {
             ) ? (
               <FlatList
                 style={{ flex: 1 }}
+                keyboardDismissMode="on-drag" 
                 data={selectedIndex === 0 ? ViewLeadsData : ViewProspectData}
                 keyExtractor={(item, index) => index?.toString()}
                 renderItem={({ item, index }) => renderRow(item, index)}

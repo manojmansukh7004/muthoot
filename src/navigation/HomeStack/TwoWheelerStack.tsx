@@ -131,7 +131,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 
 const TwoWheelerStack = () => {
-  // console.log("mjjjjjj");
+  console.log("mjjjjjj");
 
   return (
     <Stack.Navigator
