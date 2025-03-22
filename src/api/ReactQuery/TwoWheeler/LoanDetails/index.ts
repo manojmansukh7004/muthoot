@@ -34,7 +34,9 @@ import {
     GetRSAAmountYearResponse,
     getLeadSourceResponse,
     getLeadBusinessVerticleResponse,
-    getVerifyEmployeeResponse
+    getVerifyEmployeeResponse,
+    GetRiskBaseLoanValueResponse,
+    GetRiskBaseMaxLTVandLoanAmntResponse
     
 } from './types';
 import { Vehical } from './api';
@@ -429,6 +431,38 @@ export const useGetVerifyEmployee = (payload) => {
     ['Vehical', payload],
     async () => {
       const response = await Vehical.GetVerifyEmployee(payload);
+      if (response.error) {
+        useShowFlashMessage('warning', response.message);
+      }
+      return response.data;
+    },
+  );
+  const { isLoading, isError, data, error } = mutation;
+
+  return [mutation, { isLoading, isError, data, error }] as const;
+};
+
+export const useGetRiskBaseMaxLTVandLoanAmnt = (payload) => {
+  const mutation = useMutation<GetRiskBaseMaxLTVandLoanAmntResponse>(
+    ['Vehical', payload],
+    async () => {
+      const response = await Vehical.GetRiskBaseMaxLTVandLoanAmnt(payload);
+      if (response.error) {
+        useShowFlashMessage('warning', response.message);
+      }
+      return response.data;
+    },
+  );
+  const { isLoading, isError, data, error } = mutation;
+
+  return [mutation, { isLoading, isError, data, error }] as const;
+};
+
+export const useGetRiskBaseLoanValue = (payload) => {
+  const mutation = useMutation<GetRiskBaseLoanValueResponse>(
+    ['Vehical', payload],
+    async () => {
+      const response = await Vehical.GetRiskBaseLoanValue(payload);
       if (response.error) {
         useShowFlashMessage('warning', response.message);
       }

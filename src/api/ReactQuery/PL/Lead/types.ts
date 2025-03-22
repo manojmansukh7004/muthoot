@@ -369,12 +369,21 @@ export type GetPlCountResponse = {
   plCount: number;
 } | null;
 
+export type UpdateHeroLeadRequest = {
+  appId: string;
+  employeeId: string;
+};
+
+export type UpdateHeroLeadResponse = {
+
+} | null;
+
 export type LeadType = BaseModule & {
   SaveImage: (
     request: SaveImageRequest,
   ) => Promise<ApiResponse<SaveImageResponse>>;
   GetLead: (id: string) => Promise<ApiResponse<GetLeadResponse>>;
-  ViewLeads: (employeeId: string, search: string) => Promise<ApiResponse<ViewLeadsResponse>>;
+  ViewLeads: (employeeId: string, search: string, type?: string) => Promise<ApiResponse<ViewLeadsResponse>>;
   ViewProspects: (employeeId: string, search: string) => Promise<ApiResponse<ViewProspectResponse>>;
   SaveorUpdateLead: (
     request: SaveorUpdateLeadRequest,
@@ -404,5 +413,7 @@ export type LeadType = BaseModule & {
     request: GetPreApprovedOfferRequest,
   ) => Promise<ApiResponse<GetPreApprovedOfferResponse>>;
   GetPlCount: (id: string) => Promise<ApiResponse<GetPlCountResponse>>;
-
+ UpdateHeroLead: (
+    request: UpdateHeroLeadRequest,
+  ) => Promise<ApiResponse<UpdateHeroLeadResponse>>;
 };

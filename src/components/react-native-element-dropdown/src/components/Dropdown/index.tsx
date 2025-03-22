@@ -525,7 +525,6 @@ const DropdownComponent: <T>(
         const _renderListHelper = () => {
           return (
             <FlatList
-            keyboardDismissMode="on-drag" 
               testID={testID + ' flatlist'}
               accessibilityLabel={accessibilityLabel + ' flatlist'}
               {...flatListProps}

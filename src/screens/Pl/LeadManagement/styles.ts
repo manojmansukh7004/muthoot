@@ -64,7 +64,7 @@ export const styles = StyleSheet.create({
   UnSelected: {
     paddingVertical: 5,
     borderRadius: 10,
-    marginHorizontal: 20,
+    // marginHorizontal: 20,
     justifyContent: 'center',
   },
   selectionIndicator: {

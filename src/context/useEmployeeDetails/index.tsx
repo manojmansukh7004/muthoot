@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {getSecureData, removeSecureData} from 'api/Axios/TwoWheelerBaseurl';
 import {
   createContext,
   useState,
@@ -22,10 +23,10 @@ const EmployeeDetailsContext = createContext<EmployeeDetailsContextTypes>({
   employeeId: '',
   employeeName: '',
   roleDescription: '',
-  SaveEmployeeId: () => { },
-  SaveEmployeeName: () => { },
-  SaveRoleDescription: () => { },
-  ResetEmployeeDetails: () => { },
+  SaveEmployeeId: () => {},
+  SaveEmployeeName: () => {},
+  SaveRoleDescription: () => {},
+  ResetEmployeeDetails: () => {},
 });
 
 interface EmployeeDetialsProviderProps {
@@ -50,42 +51,47 @@ export const EmployeeDetialsProvider: FC<EmployeeDetialsProviderProps> = ({
   };
 
   const ResetEmployeeDetails = async () => {
-    console.log("ResetEmployeeDetails*************************");
-    
-    await AsyncStorage.removeItem('employeeId');
-    await AsyncStorage.removeItem('employeeName');
-    await AsyncStorage.removeItem('roleDescription');
+    console.log('ResetEmployeeDetails*************************');
+    await removeSecureData();
+    // await AsyncStorage.removeItem('employeeId');
+    // await AsyncStorage.removeItem('employeeName');
+    // await AsyncStorage.removeItem('roleDescription');
     setEmployeeId('');
     setEmployeeName('');
     setRoleDescription('');
-
   };
 
   const getEmployeeId = async () => {
-    const employeeId = await AsyncStorage.getItem('employeeId');
+    // const employeeId = await AsyncStorage.getItem('employeeId');
+    const secureData = await getSecureData();
+    const employeeId = secureData?.employeeId;
     return employeeId;
   };
 
   const getEmployeeName = async () => {
-    const employeeName = await AsyncStorage.getItem('employeeName');
-    return (employeeName);
+    // const employeeName = await AsyncStorage.getItem('employeeName');
+    const secureData = await getSecureData();
+    const employeeName = secureData?.employeeName;
+    return employeeName;
   };
 
   const getRoleDescription = async () => {
-    const roleDescription = await AsyncStorage.getItem('roleDescription');
-    return (roleDescription);
+    // const roleDescription = await AsyncStorage.getItem('roleDescription');
+    const secureData = await getSecureData();
+    const roleDescription = secureData?.roleDescription;
+    return roleDescription;
   };
 
   useEffect(() => {
-    console.log("contexttttttttt",employeeId);
-    
+    console.log('contexttttttttt', employeeId);
+
     if (!employeeId) {
-      console.log("tttttttttt");
-      
+      console.log('tttttttttt');
+
       getEmployeeId().then(result => {
         if (result) {
-          console.log("rrrrrr",result);
-          
+          console.log('rrrrrr', result);
+
           setEmployeeId(result);
         }
       });
@@ -106,7 +112,6 @@ export const EmployeeDetialsProvider: FC<EmployeeDetialsProviderProps> = ({
         }
       });
     }
-    
   }, []);
 
   return (

@@ -11,7 +11,7 @@ import AddressDetails from 'screens/TwoWheeler/AddressDetails';
 import PANVerification from 'screens/TwoWheeler/PANVerification';
 import PhotoVerification from 'screens/TwoWheeler/PhotoVerification';
 import ProductDetails from 'screens/TwoWheeler/ProductDetails';
-import LoanDetails from 'screens/TwoWheeler/LoanDetails';
+import LoanDetails from 'screens/TwoWheeler/LoanDetails/LoanDetails';
 import DelarshipDetails from 'screens/TwoWheeler/DelarshipDetails';
 import References from 'screens/TwoWheeler/References/index';
 import { VersionCheckResponse } from 'api/ReactQuery/TwoWheeler/Auth/types';
@@ -131,7 +131,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 
 const TwoWheelerStack = () => {
-  console.log("mjjjjjj");
+  // console.log("mjjjjjj");
 
   return (
     <Stack.Navigator

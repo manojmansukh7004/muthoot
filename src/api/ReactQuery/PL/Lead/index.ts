@@ -23,7 +23,9 @@ import {
   GetPreApprovedOfferRequest,
   GetPreApprovedOfferResponse,
   GetPlCountResponse,
-  GetRefrenceResponse
+  GetRefrenceResponse,
+  UpdateHeroLeadRequest,
+  UpdateHeroLeadResponse
 } from './types';
 import {Lead} from './api';
 
@@ -75,9 +77,9 @@ export const useGetLead = (id: string) => {
   return [mutation, {isLoading, isError, data, error}] as const;
 };
 
-export const useViewLeads = (employeeId: string,search:string) => {
+export const useViewLeads = (employeeId: string,search:string, type?: string) => {
   const mutation = useMutation<ViewLeadsResponse>(['Lead', employeeId,search], async () => {
-    const response = await Lead.ViewLeads(employeeId,search);
+    const response = await Lead.ViewLeads(employeeId,search, type);
     if (response.error) {
       useShowFlashMessage('warning', response.message);
     }
@@ -324,6 +326,26 @@ export const useGetRefrence = (id: string) => {
       const response = await Lead.GetRefrence(id);
       if (response.error) {
         useShowFlashMessage('warning', response.message);
+      }
+      return response.data;
+    },
+  );
+
+  const { isLoading, isError, data, error } = mutation;
+
+  return [mutation, { isLoading, isError, data, error }] as const;
+};
+
+export const useUpdateHeroLead = (payload: UpdateHeroLeadRequest) => {
+  const mutation = useMutation<UpdateHeroLeadResponse>(
+    ['Lead', payload],
+    async () => {
+      const response = await Lead.UpdateHeroLead(payload);
+      if (response.error) {
+        useShowFlashMessage('warning', response.message);
+      } 
+      else {
+        useShowFlashMessage('success', response.message);
       }
       return response.data;
     },

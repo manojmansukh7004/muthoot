@@ -69,6 +69,7 @@ const NumberField: FC<NumberFieldProps> = ({onOTPChange,login}) => {
       {otpArray.map((value, index) => (
         <TextInput
           defaultValue={''}
+          contextMenuHidden={true}
           key={index}
           value={value}
           ref={pinInputRefs[index]}

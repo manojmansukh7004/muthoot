@@ -58,6 +58,7 @@ import { APP_FONTS, FONT_SIZE } from 'config/Fonts';
 import LabeledDropdown from 'components/LabeledDropdown';
 import useFontNormalise from 'hooks/useFontNormalise';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getSecureData } from 'api/Axios/TwoWheelerBaseurl';
 
 type RepaymentDetailsNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -1057,8 +1058,11 @@ const RepaymentDetails: FC<RepaymentDetailsScreenProps> = ({
       //manoj
       if (applicantId) {
         const isNachReactivation = async () => {
-          const isNachReactivation = await AsyncStorage.getItem('isNachReactivation')
-          console.log("isNachReactivation666666666", isNachReactivation);
+          // const isNachReactivation = await AsyncStorage.getItem('isNachReactivation')
+            const secureData = await getSecureData();
+                  const isNachReactivation = secureData?.isNachReactivation;
+          
+          // console.log("isNachReactivation666666666", isNachReactivation);
           setIsNachReactivation(isNachReactivation == 'true' ? true : false)
 
           isNachReactivation == 'true' ?

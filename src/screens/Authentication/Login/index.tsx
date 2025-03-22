@@ -401,6 +401,7 @@ const Login: FC<LoginScreenProps> = ({ navigation, route }) => {
               />
               <TextInput
                 placeholder="Your Id"
+                contextMenuHidden={true}
                 // keyboardType="number-pad"
                 value={data.username}
                 placeholderTextColor="#666666"
@@ -449,6 +450,7 @@ const Login: FC<LoginScreenProps> = ({ navigation, route }) => {
               <TextInput
                 placeholder="Your Password"
                 value={data.password}
+                contextMenuHidden={true}
                 placeholderTextColor="#666666"
                 secureTextEntry={data.secureTextEntry ? true : false}
                 style={[
@@ -495,6 +497,7 @@ const Login: FC<LoginScreenProps> = ({ navigation, route }) => {
             <View style={styles.action}>
               <TextInput
                 placeholder="Enter Captcha"
+                contextMenuHidden={true}
                 placeholderTextColor="#666666"
                 value={textInputHolder}
                 style={[

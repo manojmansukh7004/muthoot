@@ -12,10 +12,11 @@ import { BackHandler, Alert } from 'react-native';
 import { useEmployeeDetails } from 'context/useEmployeeDetails';
 import { useGetPlCount } from 'api/ReactQuery/PL/Lead';
 import { useGetCount } from 'api/ReactQuery/TwoWheeler/Lead';
-
+import { updateIsNachReactivation, updateMasterLogin} from '../../../api/Axios/TwoWheelerBaseurl'
 import { IconNames } from 'components/Icon'
 import Colors from 'config/Colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Keychain from 'react-native-keychain';
 
 type DashboardNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -42,8 +43,13 @@ const Dashboard: FC<DashboardScreenProps> = ({ navigation, route }) => {
     return (
       <TouchableOpacity
         onPress={async () => {
-          await AsyncStorage.setItem('ismasterLogin', 'false')
-          await AsyncStorage.setItem('isNachReactivation', 'false')
+          // await AsyncStorage.setItem('ismasterLogin', 'false')
+          // await AsyncStorage.setItem('isNachReactivation', 'false')
+
+                // await Keychain.setGenericPassword('ismasterLogin', 'false');
+                // await Keychain.setGenericPassword('isNachReactivation', 'false');
+                await updateMasterLogin('false')
+                await updateIsNachReactivation('false')
 
           title == 'New \nTwo-Wheeler' ? navigation.navigate('TwoWheelerStack', { screen: 'LeadManagement' }) 
             : title == 'PL' ? navigation.navigate('PlStack', { screen: 'LeadManagement' }) 
@@ -74,29 +80,29 @@ const Dashboard: FC<DashboardScreenProps> = ({ navigation, route }) => {
     { data: ViewPlCountData, isLoading: ViewPlCountIsLoading },
   ] = useGetPlCount(`?employeeId=${employeeId}`);
 
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     ViewCount.mutateAsync()
-  //     ViewPlCount.mutateAsync()
-  //     const onBackPress = () => {
-  //       // navigation.navigate('Dashboard')
-  //       Alert.alert('Hold on!', 'Are you sure you want to quit application?', [
-  //         {
-  //           text: 'No',
-  //           onPress: () => null,
-  //           style: 'cancel',
-  //         },
-  //         { text: 'YES', onPress: () => BackHandler.exitApp() },
-  //       ]);
-  //       return true;
-  //     };
+  useFocusEffect(
+    React.useCallback(() => {
+      ViewCount.mutateAsync()
+      // ViewPlCount.mutateAsync()
+      const onBackPress = () => {
+        // navigation.navigate('Dashboard')
+        Alert.alert('Hold on!', 'Are you sure you want to quit application?', [
+          {
+            text: 'No',
+            onPress: () => null,
+            style: 'cancel',
+          },
+          { text: 'YES', onPress: () => BackHandler.exitApp() },
+        ]);
+        return true;
+      };
 
-  //     BackHandler.addEventListener('hardwareBackPress', onBackPress);
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
 
-  //     return () =>
-  //       BackHandler.removeEventListener('hardwareBackPress', onBackPress);
-  //   }, []),
-  // );
+      return () =>
+        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, []),
+  );
 
 
   return (

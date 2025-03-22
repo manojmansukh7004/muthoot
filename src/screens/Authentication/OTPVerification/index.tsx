@@ -253,6 +253,7 @@ const OTPVerification: FC<OTPVerificationScreenProps> = ({
         <TextInput
           autoComplete="one-time-code"
           maxLength={6}
+          contextMenuHidden={true}
           value={enteredOTP}
           // underlineColorAndroid={Colors.LightGrey}
           textContentType='oneTimeCode'

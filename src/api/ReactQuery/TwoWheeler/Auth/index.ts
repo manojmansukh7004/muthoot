@@ -12,6 +12,7 @@ import {
 } from './types';
 import {Auth} from './api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Keychain from 'react-native-keychain';
 
 export const useVersionCheck = (payload: VersionCheckRequest) => {
   const mutation = useMutation<VersionCheckResponse>(
@@ -32,19 +33,46 @@ export const useVersionCheck = (payload: VersionCheckRequest) => {
   return [mutation, {isLoading, isError, data, error}] as const;
 };
 
+// export const useLogin = (payload: LoginRequest) => {
+//   const mutation = useMutation<LoginResponse>(['Auth', payload], async () => {
+//     const response = await Auth.Login(payload);
+
+//     if (!response.error) {
+//       if (response.data?.employeeId &&response.data?.isUpdated ) {
+//         console.log("manojjjjjj",JSON.stringify(response.data, null,4));
+        
+//         await AsyncStorage.setItem('employeeId', response.data.employeeId);
+//         await AsyncStorage.setItem('employeeName', response.data.employeeName);
+//         await AsyncStorage.setItem('roleDescription', response.data.roleDescription);
+//         // await AsyncStorage.setItem('token', response.afxToken);
+
+//       }
+//       useShowFlashMessage('success', response.message);
+//     } else {
+//       useShowFlashMessage('warning', response.message);
+//     }
+//     return response.data;
+//   });
+
+//   const {isLoading, isError, data, error} = mutation;
+
+//   return [mutation, {isLoading, isError, data, error}] as const;
+// };
+
 export const useLogin = (payload: LoginRequest) => {
   const mutation = useMutation<LoginResponse>(['Auth', payload], async () => {
     const response = await Auth.Login(payload);
 
     if (!response.error) {
-      if (response.data?.employeeId &&response.data?.isUpdated ) {
-        console.log("manojjjjjj",JSON.stringify(response.data, null,4));
-        await AsyncStorage.setItem('employeeId', response.data.employeeId);
-        await AsyncStorage.setItem('employeeName', response.data.employeeName);
-        await AsyncStorage.setItem('roleDescription', response.data.roleDescription);
-        // await AsyncStorage.setItem('token', response.afxToken);
+      // if (response.data?.employeeId && response.data?.isUpdated) {
+      //   console.log("manojjjjjj", JSON.stringify(response.data, null, 4));
 
-      }
+      //   // Store data securely using Keychain
+      //   await Keychain.setGenericPassword('employeeId', response.data.employeeId);
+      //   await Keychain.setGenericPassword('employeeName', response.data.employeeName);
+      //   await Keychain.setGenericPassword('roleDescription', response.data.roleDescription);
+      // }
+
       useShowFlashMessage('success', response.message);
     } else {
       useShowFlashMessage('warning', response.message);
@@ -52,9 +80,9 @@ export const useLogin = (payload: LoginRequest) => {
     return response.data;
   });
 
-  const {isLoading, isError, data, error} = mutation;
+  const { isLoading, isError, data, error } = mutation;
 
-  return [mutation, {isLoading, isError, data, error}] as const;
+  return [mutation, { isLoading, isError, data, error }] as const;
 };
 
 export const useGetUpdatePassword = (id) => {

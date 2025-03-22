@@ -19,7 +19,8 @@ import {
   salesReEdidResponse,
   GetPreApprovedOfferResponse,
   GetPlCountResponse,
-  GetRefrenceResponse
+  GetRefrenceResponse,
+  UpdateHeroLeadResponse
 } from './types';
 
 export const Lead: LeadType = {
@@ -47,10 +48,13 @@ export const Lead: LeadType = {
   ViewLeads: async (
     employeeId,
     search,
+    type
   ): Promise<ApiResponse<ViewLeadsResponse>> => {
     try {
       const response = await api.get(
-        plServiceUrls.VIEW_LEADS + `empId=${employeeId}&search=${search}`,
+        `${type == 'unAllocated' ? plServiceUrls.UNALLOCATED_LEADS : plServiceUrls.VIEW_LEADS}empId=${employeeId}&search=${search}`,
+
+        // plServiceUrls.VIEW_LEADS + `empId=${employeeId}&search=${search}`,
       );
       //console.log('API Success:', JSON.stringify(response.data));
       return response.data;
@@ -368,6 +372,24 @@ export const Lead: LeadType = {
   try {
     const response = await api.get(plServiceUrls.GET_REFRENCE + id);
     //  console.log('API Success:', JSON.stringify(response.data));
+    return response.data;
+  } catch (error: unknown) {
+    const errorMessage =
+      (error as any)?.response?.data?.message || (error as Error).message;
+    return {
+      data: null,
+      message: errorMessage,
+      afxToken: null,
+      status: (error as any)?.response?.status || 500,
+      error: true,
+    };
+  }
+},
+UpdateHeroLead: async (
+  payload,
+): Promise<ApiResponse<UpdateHeroLeadResponse>> => {
+  try {
+    const response = await api.post(plServiceUrls.UPDATE_HERO_LEAD, payload);
     return response.data;
   } catch (error: unknown) {
     const errorMessage =

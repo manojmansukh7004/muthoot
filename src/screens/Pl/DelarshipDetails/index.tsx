@@ -72,6 +72,7 @@ const DelarshipDetails: FC<DelarshipDetailsScreenProps> = ({
   const {applicantId, isMainApplicant, guarantorId} = useApplicantDetails();
   const {useViewStatus} = usedViewStatus();
     const {employeeName, employeeId} = useEmployeeDetails();
+  console.log("eeeeee",employeeId);
   
   const [isViewOnly, setIsViewOnly] = useState<boolean>(false);
   const [isError, setIsError] = useState<ErrorObject[]>([]);
@@ -109,7 +110,7 @@ const DelarshipDetails: FC<DelarshipDetailsScreenProps> = ({
   const activeDealerArray = [
     sourcedBy,
     paymentTo,
-    // hpNumber,
+    hpNumber,
     businessChannel,
     channelBranchUser,
     employeeCode,

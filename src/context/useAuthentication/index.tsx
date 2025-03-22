@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { removeSecureData } from 'api/Axios/TwoWheelerBaseurl';
 import React, {createContext, useState, FC, ReactNode, useContext} from 'react';
 
 interface AuthenticationContextTypes {
@@ -32,8 +33,10 @@ const AuthenticationProvider: FC<AuthenticationProviderProps> = ({
   const ActivateLoggingOut = async () => {
     setIsLoggedIn(false);
     setIsLoggedOut(true);
-    await AsyncStorage.removeItem('employeeId');
-    await AsyncStorage.removeItem('token');
+    await removeSecureData();
+
+    // await AsyncStorage.removeItem('employeeId');
+    // await AsyncStorage.removeItem('token');
   };
 
   return (

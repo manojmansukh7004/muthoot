@@ -62,6 +62,9 @@ const serviceUrls = {
   GET_LEAD_SOURCE: `authdemograph/leadBusinessSource/getLeadSource`,
   GET_LEAD_BUSINESS_VERTICAL: `authdemograph/leadBusinessSource/getLeadBusinessVerticle`,
   GET_VERIFY_EMPLOYEE: `authdemograph/salesApi/verify-employee`,
+  GET_RISK_BASE_LTV_AMOUNT: `authdemograph/scheme/RiskBaseMaxLTVandLoanAmnt`,
+  GET_RISK_BASE_LTV_VALUE: `authdemograph/scheme/RiskBasedOtherLoanValue`,
+
 
   GET_ALL_BRANCH: `authdemograph/branch/getAllBranchDetails`,
   GET_MANUFACTURE: `authdemograph/lead/getVechileManufacture`,

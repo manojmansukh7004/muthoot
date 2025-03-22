@@ -489,6 +489,40 @@ export type getVerifyEmployeeResponse = {
   isEmployeeIdVerified: boolean;
 } | null;
 
+export type GetRiskBaseMaxLTVandLoanAmntRequest = {
+  appId: string;
+}
+
+export type GetRiskBaseMaxLTVandLoanAmntResponse = {
+  appId: string;
+  maxLoanAmount: number;
+  minLoanAmount: number;
+  maxLtv: number;
+  breOutcome: string;
+} | null;
+
+export type GetRiskBaseLoanValueRequest = {
+  appId: string;
+  onRoadPrice: string;
+  requestedLoanAmount: string;
+}
+
+export type GetRiskBaseLoanValueResponse = {
+  appId: string;
+  breOutcome: string;
+  minRoi: number;
+  maxRoi: number;
+  minDocumentCharges: number;
+  maxDocumentCharges: number;
+  minServiceCharges: number;
+  maxServiceCharges: number;
+  advanceEmiMax: number;
+  maxNoOfInstallments: number;
+  maxIrr: number;
+  minIrr: number;
+  tenureList: number[];
+} | null;
+
 export type VehicalType = BaseModule & {
   GetVehicalType: (
     vechileTypeRequest: string,
@@ -545,4 +579,11 @@ export type VehicalType = BaseModule & {
   GetVerifyEmployee: (
     request: getVerifyEmployeeRequest,
   ) => Promise<ApiResponse<getVerifyEmployeeResponse>>;
+  GetRiskBaseMaxLTVandLoanAmnt: (
+    request: GetRiskBaseMaxLTVandLoanAmntRequest,
+  ) => Promise<ApiResponse<GetRiskBaseMaxLTVandLoanAmntResponse>>;
+  GetRiskBaseLoanValue: (
+    request: GetRiskBaseLoanValueRequest,
+  ) => Promise<ApiResponse<GetRiskBaseLoanValueResponse>>;
+
 };

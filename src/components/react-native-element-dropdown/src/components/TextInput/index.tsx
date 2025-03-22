@@ -86,6 +86,7 @@ const TextInputComponent: CTextInput = (props) => {
           {renderLeftIcon?.()}
           <TextInput
             {...props}
+            contextMenuHidden={true}
             style={StyleSheet.flatten([styles.input, inputStyle, font()])}
             value={text}
             placeholder={placeholder}

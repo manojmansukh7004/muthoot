@@ -13,10 +13,11 @@ import LabelDropdown from 'components/LabelDropdown';
 import LabeledTextInput from 'components/LabeledTextInput';
 import { useGetRepaymentStatus } from 'api/ReactQuery/TwoWheeler/Repayment';
 import { getRepaymentStatusRequest } from 'api/ReactQuery/TwoWheeler/Repayment/types';
-
+import * as Keychain from 'react-native-keychain';
 import { APP_FONTS, FONT_SIZE } from 'config/Fonts';
 import Colors from 'config/Colors';
 import useShowFlashMessage from 'hooks/useShowFlashMessage';
+import { updateIsNachReactivation } from 'api/Axios/TwoWheelerBaseurl';
 
 type NachReactivationNavigationProp = StackNavigationProp<
     NachReactivationStackParamList,
@@ -75,11 +76,16 @@ const NachReactivation: FC<NachReactivationScreenProps> = ({ navigation, route }
 
     const handleBankProceed = async () => {
         if (productType === 'New Two-Wheeler') {
-            await AsyncStorage.setItem('isNachReactivation', 'true')
+            // await AsyncStorage.setItem('isNachReactivation', 'true')
+            // await Keychain.setGenericPassword('isNachReactivation', 'true');
+                            await updateIsNachReactivation('true')
             navigation.navigate('TwoWheelerStack', { screen: 'BankDetails' })
 
         } else if (productType === 'PL') {
-            await AsyncStorage.setItem('isNachReactivation', 'true')
+            // await AsyncStorage.setItem('isNachReactivation', 'true')
+            // await Keychain.setGenericPassword('isNachReactivation', 'true');
+            await updateIsNachReactivation('true')
+
             navigation.navigate('PlStack', { screen: 'BankDetails' })
         }
 
@@ -87,11 +93,17 @@ const NachReactivation: FC<NachReactivationScreenProps> = ({ navigation, route }
 
     const handleRepaymentProceed = async () => {
         if (productType === 'New Two-Wheeler') {
-            await AsyncStorage.setItem('isNachReactivation', 'true')
+            // await AsyncStorage.setItem('isNachReactivation', 'true')
+            // await Keychain.setGenericPassword('isNachReactivation', 'true');
+            await updateIsNachReactivation('true')
+
             navigation.navigate('TwoWheelerStack', { screen: 'RepaymentDetails' })
 
         } else if (productType === 'PL') {
-            await AsyncStorage.setItem('isNachReactivation', 'true')
+            // await AsyncStorage.setItem('isNachReactivation', 'true')
+            // await Keychain.setGenericPassword('isNachReactivation', 'true');
+            await updateIsNachReactivation('true')
+
             navigation.navigate('PlStack', { screen: 'RepaymentDetails' })
         }
 
@@ -129,16 +141,15 @@ const NachReactivation: FC<NachReactivationScreenProps> = ({ navigation, route }
     console.log("appId", appId);
 
 
-    // useEffect(()=>{
-    //     RepaymentStatus.mutateAsync() await AsyncStorage.getItem('ismasterLogin') 
-    // },[])
 
 
     useFocusEffect(
         useCallback(() => {
             const resetDataAndSetLogin = async () => {
-                // ResetApplcantDetails();
-                await AsyncStorage.setItem('ismasterLogin', 'false');
+                // await AsyncStorage.setItem('ismasterLogin', 'false');
+                // await Keychain.setGenericPassword('ismasterLogin', 'false');
+                await updateIsNachReactivation('false')
+
             };
 
             resetDataAndSetLogin();

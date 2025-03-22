@@ -9,6 +9,7 @@ import {
 } from './types';
 import {Auth} from './api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Keychain from 'react-native-keychain';
 
 export const useVersionCheck = (payload: VersionCheckRequest) => {
   const mutation = useMutation<VersionCheckResponse>(
@@ -36,10 +37,12 @@ export const useLogin = (payload: LoginRequest) => {
     if (!response.error) {
       if (response.data?.employeeId && response.afxToken) {
         // console.log("fffffffff",JSON.stringify(response.data, null,4));
-        await AsyncStorage.setItem('employeeId', response.data.employeeId);
-        await AsyncStorage.setItem('employeeName', response.data.employeeName);
-        await AsyncStorage.setItem('roleDescription', response.data.roleDescription);
-        await AsyncStorage.setItem('token', response.afxToken);
+        // await AsyncStorage.setItem('employeeId', response.data.employeeId);
+        // await AsyncStorage.setItem('employeeName', response.data.employeeName);
+        // await AsyncStorage.setItem('roleDescription', response.data.roleDescription);
+          await Keychain.setGenericPassword('employeeId', response.data.employeeId);
+                await Keychain.setGenericPassword('employeeName', response.data.employeeName);
+                await Keychain.setGenericPassword('roleDescription', response.data.roleDescription);
       }
       useShowFlashMessage('success', response.message);
     } else {

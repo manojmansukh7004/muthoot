@@ -192,7 +192,7 @@ const SummaryCard: FC<SummaryCardType> = ({
     : section.filter(item => item.screenName !== 'PAN Verification');
 
   let filteredOVDSections = section.filter(item => item.screenName !== 'OVD Verification')
-  // console.log("mjjjjjjjrrr==js", loanOffer);
+  console.log("mjjjjjjjrrr==js", loanOffer);
 
   return (
     <View style={[styles.container]}>

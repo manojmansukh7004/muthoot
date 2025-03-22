@@ -111,6 +111,7 @@ const TextInput: FC<TextInputProps> = ({
     <View style={[containerbox, {width: halfSize ? '47%' : '100%'}]}>
       <ReactNativeTextInput
         style={inputbox}
+        contextMenuHidden={true}
         placeholder={placeholder || ''}
         placeholderTextColor={Colors.PlaceHolderGrey}
         onChangeText={handleOnChange}

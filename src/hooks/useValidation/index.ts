@@ -554,6 +554,14 @@ const useValidation = () => {
           errorFlag = true;
           error = `${FieldName} cannot be a decimal value`;
         }
+        else if (Number(value) < Number(min)) {
+          error = `${FieldName} should not be less than ${min}`;
+          errorFlag = true;
+        }
+        else if (Number(value) > Number(max)) {
+          error = `${FieldName} should not be greater than ${max}`;
+          errorFlag = true;
+        }
         break;
 
       case 'Vehicle Registration Number':

@@ -27,7 +27,11 @@ import {
  GetRSAAmountYearResponse,
  getVerifyEmployeeResponse,
  getLeadBusinessVerticleResponse,
- getLeadSourceResponse
+ getLeadSourceResponse,
+ GetRiskBaseLoanValueRequest,
+ GetRiskBaseLoanValueResponse,
+ GetRiskBaseMaxLTVandLoanAmntRequest,
+ GetRiskBaseMaxLTVandLoanAmntResponse
 } from './types';
 
 export const Vehical: VehicalType = {
@@ -521,6 +525,48 @@ export const Vehical: VehicalType = {
   GetVerifyEmployee: async (payload): Promise<ApiResponse<getVerifyEmployeeResponse>> => {
     try {
       const response = await api.post(serviceUrls.GET_VERIFY_EMPLOYEE, payload );
+      // console.log('API Success:', JSON.stringify(response.data));
+      return response.data;
+    } catch (error: unknown) {
+ 
+      const errorMessage =
+        (error as any)?.response?.data?.message || (error as Error).message;
+
+      return {
+        data: null,
+        message: errorMessage,
+        afxToken: null,
+        status: (error as any)?.response?.status || 500,
+        error: true,
+      };
+    }
+  },
+
+  GetRiskBaseMaxLTVandLoanAmnt: async (payload): Promise<ApiResponse<GetRiskBaseMaxLTVandLoanAmntResponse>> => {
+    
+    try {
+      const response = await api.post(serviceUrls.GET_RISK_BASE_LTV_AMOUNT, payload );
+      // console.log('API Success:', JSON.stringify(response.data));
+      return response.data;
+    } catch (error: unknown) {
+ 
+      const errorMessage =
+        (error as any)?.response?.data?.message || (error as Error).message;
+
+      return {
+        data: null,
+        message: errorMessage,
+        afxToken: null,
+        status: (error as any)?.response?.status || 500,
+        error: true,
+      };
+    }
+  },
+
+  GetRiskBaseLoanValue: async (payload): Promise<ApiResponse<GetRiskBaseLoanValueResponse>> => {
+    
+    try {
+      const response = await api.post(serviceUrls.GET_RISK_BASE_LTV_VALUE, payload );
       // console.log('API Success:', JSON.stringify(response.data));
       return response.data;
     } catch (error: unknown) {

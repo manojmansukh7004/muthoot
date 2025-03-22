@@ -5,6 +5,9 @@ const plServiceUrls = {
   GET_LEAD: `authdemograph-pl/lead/getLead?appId=`,
   SAVE_OR_UPDATE_LEAD: `authdemograph-pl/lead/saveOrUpdateLead`,
   VIEW_LEADS: 'authdemograph-pl/lead/viewLead?',
+  UNALLOCATED_LEADS: 'authdemograph-pl/heroLead/getHeroUnAllocatedLead?',
+  UPDATE_HERO_LEAD: `authdemograph-pl/heroLead/updateHeroLeadDetails`,
+
   GET_CUSTOMER_TYPE: 'authdemograph-pl/lead/getCustomerType',
   VIEW_PROSPECT: `authdemograph-pl/lead/viewProspect?`,
   SAVE_IMAGE: `authdemograph-pl/lead/saveImage`,

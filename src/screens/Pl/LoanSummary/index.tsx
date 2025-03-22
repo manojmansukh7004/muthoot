@@ -22,6 +22,7 @@ import {
 import styles from './styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Button from 'components/Button';
+import { getSecureData } from 'api/Axios/TwoWheelerBaseurl';
 
 export type LoanSummaryNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -351,14 +352,20 @@ const LoanSummary: FC<LoanSummaryScreenProps> = ({ navigation, route }) => {
   useFocusEffect(
     React.useCallback(() => {
       const getMasterLogin = async () => {
-        const value = await AsyncStorage.getItem('ismasterLogin');
+        // const value = await AsyncStorage.getItem('ismasterLogin');
+         const secureData = await getSecureData();
+            const value = secureData?.ismasterLogin;
         console.log("mmmmmm&&&&&&&&&&&&&&&&mm", value);
         setMasterLogin(value);
       };
 
       getMasterLogin();
       const onBackPress = async () => {
-        await AsyncStorage.getItem('ismasterLogin') == 'true' ?
+        const secureData = await getSecureData();
+        const ismasterLogin = secureData?.ismasterLogin;
+        // await AsyncStorage.getItem('ismasterLogin') 
+
+        ismasterLogin == 'true' ?
           navigation.navigate('Dashboard')
           :
           navigation.navigate('LeadManagement')
@@ -432,7 +439,7 @@ const LoanSummary: FC<LoanSummaryScreenProps> = ({ navigation, route }) => {
     ),
   ];
 
-  // console.log("rrrrrrrr", isLoading);
+  console.log("rrrrrrrr", isLoading);
 
   return (
     <WaveBackground isMasterApp={JSON.parse(masterLogin)} loading={[

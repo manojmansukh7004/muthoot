@@ -1,7 +1,7 @@
-import React, { FC, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import { RouteProp } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import React, {FC, useEffect, useState} from 'react';
+import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import {RouteProp} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 import {
   useVerifyBankAccount,
   useGetBankAccountDetails,
@@ -15,25 +15,29 @@ import {
   UploadDocumentRequest,
   docTypes,
 } from 'api/ReactQuery/TwoWheeler/Document/types';
-import { useDeleteDocument, useUploadDocument } from 'api/ReactQuery/TwoWheeler/Document';
-import { useGetCashDetails } from 'api/ReactQuery/TwoWheeler/Repayment';
+import {
+  useDeleteDocument,
+  useUploadDocument,
+} from 'api/ReactQuery/TwoWheeler/Document';
+import {useGetCashDetails} from 'api/ReactQuery/TwoWheeler/Repayment';
 import Modal from 'components/Modal';
 import WaveBackground from 'components/WaveBackground';
 import Button from 'components/Button';
-import { RootStackParamList } from 'navigation/HomeStack/TwoWheelerStack';
-import { useApplicantDetails } from 'context/useApplicantDetails';
-import { ErrorObject } from 'config/Types';
+import {RootStackParamList} from 'navigation/HomeStack/TwoWheelerStack';
+import {useApplicantDetails} from 'context/useApplicantDetails';
+import {ErrorObject} from 'config/Types';
 import LabeledTextInput from 'components/LabeledTextInput';
 import useActive from 'hooks/useActive';
 import LoanSummaryButton from 'components/LoanSummaryButton';
 import Icon from 'components/Icon';
-import { APP_FONTS } from 'config/Fonts';
+import {APP_FONTS} from 'config/Fonts';
 import useFontNormalise from 'hooks/useFontNormalise';
 import Colors from 'config/Colors';
 import LabelDropdown from 'components/LabelDropdown';
-import { usedViewStatus } from 'context/useViewStatus';
+import {usedViewStatus} from 'context/useViewStatus';
 import LabeledUploadMultiDocument from 'components/LabeledUploadMultiDocument';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {getSecureData} from 'api/Axios/TwoWheelerBaseurl';
 
 type BankDetailsNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -47,11 +51,11 @@ interface BankDetailsScreenProps {
   route: BankDetailsRouteProp;
 }
 
-const BankDetails: FC<BankDetailsScreenProps> = ({ navigation, route }) => {
+const BankDetails: FC<BankDetailsScreenProps> = ({navigation, route}) => {
   // const [AddLead, {data: AddLeadData, isLoading: AddLeadIsLoading}] =
   //   useAddLead(requestAdd);
-  const { applicantId, guarantorId, } = useApplicantDetails();
-  const { useViewStatus } = usedViewStatus();
+  const {applicantId, guarantorId} = useApplicantDetails();
+  const {useViewStatus} = usedViewStatus();
 
   // console.log("ccccccc", useViewStatus?.isSubmitToDisbursement);
   const [isCashVisible, setIsCashVisible] = useState<boolean>(false);
@@ -72,23 +76,27 @@ const BankDetails: FC<BankDetailsScreenProps> = ({ navigation, route }) => {
   const [bankPassbook, setBankPassbook] = useState<string>('');
   const [accStatement, setAccStatement] = useState<string>('');
   const [selectedDocument, setSelectedDocument] = useState<string>('');
-  const [bankPassbookDocType, setBankPassbookDocType] = useState<'pdf' | 'jpg' | null>(null);
-  const [accStatementDocType, setAccStatementDocType] = useState<'pdf' | 'jpg' | null>(null);
-  const [accountStatementFileName, setaccountStatementFileName] = useState<string>('');
+  const [bankPassbookDocType, setBankPassbookDocType] = useState<
+    'pdf' | 'jpg' | null
+  >(null);
+  const [accStatementDocType, setAccStatementDocType] = useState<
+    'pdf' | 'jpg' | null
+  >(null);
+  const [accountStatementFileName, setaccountStatementFileName] =
+    useState<string>('');
   const [bankPassbookFileName, setbankPassbookFileName] = useState<string>('');
   const [isNachReactivation, setIsNachReactivation] = useState<boolean>(false);
-
 
   const VerifyBankAccountRequest: VerifyBankAccountRequest = {
     applicantId,
     accountNumber,
     ifsc: ifscCode,
-    applicantType: applicantType == "Main Applicant" ? "mainApplicant" : "guarantor",
+    applicantType:
+      applicantType == 'Main Applicant' ? 'mainApplicant' : 'guarantor',
     accountType,
     guarantorId: guarantorId,
     isReEdit: true,
-    isNachReactivation: isNachReactivation
-
+    isNachReactivation: isNachReactivation,
   };
 
   const GetBankAccountDetailsRequest: GetBankAccountDetailsRequest = {
@@ -99,51 +107,56 @@ const BankDetails: FC<BankDetailsScreenProps> = ({ navigation, route }) => {
     appId: applicantId,
     base64value: bankPassbookBase64,
     doctype: 'Bank Passbook',
-    applicantType: applicantType == "Main Applicant" ? "mainApplicant" : "guarantor",
+    applicantType:
+      applicantType == 'Main Applicant' ? 'mainApplicant' : 'guarantor',
     type: bankPassbookDocType,
     isMandatory: 'Y',
     fileName: `${'Bank Passbook'}${new Date().getTime()}`,
     isMultiple: 'N',
-    documentType: 'Bank Details'
+    documentType: 'Bank Details',
   };
 
   const UploadAccStatementRequest: UploadDocumentRequest = {
     appId: applicantId,
     base64value: accStatementBase64,
     doctype: 'Account Statement',
-    applicantType: applicantType == "Main Applicant" ? "mainApplicant" : "guarantor",
+    applicantType:
+      applicantType == 'Main Applicant' ? 'mainApplicant' : 'guarantor',
     type: accStatementDocType,
     isMandatory: 'Y',
     fileName: `${'Account Statement'}${new Date().getTime()}`,
     isMultiple: 'N',
-
   };
 
   const [
     UploadDocuments,
-    { data: UploadDocumentData, isLoading: UploadDocumentsIsLoading },
+    {data: UploadDocumentData, isLoading: UploadDocumentsIsLoading},
   ] = useUploadDocument(UploadDocumentRequest);
 
   const [
     UploadAccStatement,
-    { data: UploadAccStatementData, isLoading: UploadAccStatementIsLoading },
+    {data: UploadAccStatementData, isLoading: UploadAccStatementIsLoading},
   ] = useUploadDocument(UploadAccStatementRequest);
 
   const DeleteDocumentRequest: DeleteDocumentRequest = {
     appId: applicantId,
     doctype: selectedDocument,
-    applicantType: applicantType == "Main Applicant" ? "mainApplicant" : "guarantor",
-    isMandatory: "N",
-    fileName: selectedDocument == 'Bank Passbook' ? bankPassbookFileName : accountStatementFileName
+    applicantType:
+      applicantType == 'Main Applicant' ? 'mainApplicant' : 'guarantor',
+    isMandatory: 'N',
+    fileName:
+      selectedDocument == 'Bank Passbook'
+        ? bankPassbookFileName
+        : accountStatementFileName,
   };
 
-  const [DeleteDocument, { data: DeleteDocumentData }] = useDeleteDocument(
+  const [DeleteDocument, {data: DeleteDocumentData}] = useDeleteDocument(
     DeleteDocumentRequest,
   );
 
   const [
     VerifyBankAccount,
-    { data: VerifyBankAccountData, isLoading: VerifyBankAccountIsLoading },
+    {data: VerifyBankAccountData, isLoading: VerifyBankAccountIsLoading},
   ] = useVerifyBankAccount(VerifyBankAccountRequest);
 
   const [
@@ -154,14 +167,15 @@ const BankDetails: FC<BankDetailsScreenProps> = ({ navigation, route }) => {
     },
   ] = useGetBankAccountDetails(GetBankAccountDetailsRequest);
 
-  const [GetCashDetails, { data: GetCashDetailsData, isLoading: GetCashDetailsIsLoading }] =
-    useGetCashDetails(`${applicantId}`);
+  const [
+    GetCashDetails,
+    {data: GetCashDetailsData, isLoading: GetCashDetailsIsLoading},
+  ] = useGetCashDetails(`${applicantId}`);
 
   const ResetBankDetails = () => {
     setAccountHolderName('');
     setBankName('');
   };
-
 
   useEffect(() => {
     if (VerifyBankAccountData) {
@@ -177,12 +191,10 @@ const BankDetails: FC<BankDetailsScreenProps> = ({ navigation, route }) => {
 
   useEffect(() => {
     if (GetCashDetailsData) {
-      console.log("GetCashDetailsData", GetCashDetailsData);
-      setIsCashVisible(GetCashDetailsData.isCash)
-
-
+      console.log('GetCashDetailsData', GetCashDetailsData);
+      setIsCashVisible(GetCashDetailsData.isCash);
     }
-  }, [GetCashDetailsData])
+  }, [GetCashDetailsData]);
 
   useEffect(() => {
     isChanged && ResetBankDetails();
@@ -190,49 +202,64 @@ const BankDetails: FC<BankDetailsScreenProps> = ({ navigation, route }) => {
 
   useEffect(() => {
     if (GetBankAccountDetailsData) {
-      console.log("GetBankAccountDetailsData", JSON.stringify(GetBankAccountDetailsData, null, 4));
+      console.log(
+        'GetBankAccountDetailsData',
+        JSON.stringify(GetBankAccountDetailsData, null, 4),
+      );
 
       setIfscCode(GetBankAccountDetailsData.ifscCode || '');
       setAccountNumber(GetBankAccountDetailsData.accountNumber || '');
       setBankName(GetBankAccountDetailsData.bankName || '');
       setAccountHolderName(GetBankAccountDetailsData.accountHolderName || '');
-      setApplicantType(GetBankAccountDetailsData.applicantType == 'mainApplicant' ? 'Main Applicant' : 'Guarantor');
-      setAccountType(GetBankAccountDetailsData.accountType)
+      setApplicantType(
+        GetBankAccountDetailsData.applicantType == 'mainApplicant'
+          ? 'Main Applicant'
+          : 'Guarantor',
+      );
+      setAccountType(GetBankAccountDetailsData.accountType);
       setBankPassbook(GetBankAccountDetailsData.bankPassbook || '');
       setAccStatement(GetBankAccountDetailsData.accountStatement || '');
       setBankPassbookDocType(GetBankAccountDetailsData.bankPassbookType);
-      setAccStatementDocType(GetBankAccountDetailsData.bankPassbookType)
-      setaccountStatementFileName(GetBankAccountDetailsData.accountStatementFileName);
-      setbankPassbookFileName(GetBankAccountDetailsData.bankPassbookFileName)
+      setAccStatementDocType(GetBankAccountDetailsData.bankPassbookType);
+      setaccountStatementFileName(
+        GetBankAccountDetailsData.accountStatementFileName,
+      );
+      setbankPassbookFileName(GetBankAccountDetailsData.bankPassbookFileName);
 
       setIsChanged(false);
     }
   }, [GetBankAccountDetailsData]);
 
   useEffect(() => {
-    GetCashDetails.mutateAsync()
+    GetCashDetails.mutateAsync();
   }, []);
 
   useEffect(() => {
     if (useViewStatus) {
-
       setIsViewOnly(
-        isNachReactivation ? false :
-          useViewStatus?.isReEditbankDetails == false ? true :
-            useViewStatus?.isSalesReject ? true :
-              useViewStatus?.isDisbursementFreeze ? true :
-                false);
+        isNachReactivation
+          ? false
+          : useViewStatus?.isReEditbankDetails == false
+          ? true
+          : useViewStatus?.isSalesReject
+          ? true
+          : useViewStatus?.isDisbursementFreeze
+          ? true
+          : false,
+      );
     }
   }, [isNachReactivation]);
 
   useEffect(() => {
     const isNachReactivation = async () => {
-      const isNachReactivation = await AsyncStorage.getItem('isNachReactivation')
-      console.log("isNachReactivation", isNachReactivation);
-      setIsNachReactivation(isNachReactivation == 'true' ? true : false)
+      // const isNachReactivation = await AsyncStorage.getItem('isNachReactivation')
+      const secureData = await getSecureData();
+      const isNachReactivation = secureData?.isNachReactivation;
+      console.log('isNachReactivation', isNachReactivation);
+      setIsNachReactivation(isNachReactivation == 'true' ? true : false);
       GetBankAccount.mutateAsync();
-    }
-    isNachReactivation()
+    };
+    isNachReactivation();
   }, []);
   // console.log("jjjjjj", isNachReactivation);
 
@@ -254,9 +281,6 @@ const BankDetails: FC<BankDetailsScreenProps> = ({ navigation, route }) => {
   //   }
   // }, [UploadDocumentData, UploadAccStatementData]);
 
-
-
-
   useEffect(() => {
     if (selectedDocument) {
       DeleteDocument.mutateAsync();
@@ -265,17 +289,16 @@ const BankDetails: FC<BankDetailsScreenProps> = ({ navigation, route }) => {
 
   useEffect(() => {
     if (DeleteDocumentData) {
-      console.log("DeleteDocumentData", DeleteDocumentData);
-      selectedDocument == 'Bank Passbook' ? setBankPassbook('') : null
-      selectedDocument == 'Account Statement' ? setAccStatement('') : null
+      console.log('DeleteDocumentData', DeleteDocumentData);
+      selectedDocument == 'Bank Passbook' ? setBankPassbook('') : null;
+      selectedDocument == 'Account Statement' ? setAccStatement('') : null;
 
-      setSelectedDocument('')
-      setAccStatementBase64('')
-      setBankPassbookBase64('')
-      GetBankAccount.mutateAsync()
+      setSelectedDocument('');
+      setAccStatementBase64('');
+      setBankPassbookBase64('');
+      GetBankAccount.mutateAsync();
     }
   }, [DeleteDocumentData]);
-
 
   const handleSubmit = () => {
     VerifyBankAccount.mutateAsync();
@@ -284,14 +307,18 @@ const BankDetails: FC<BankDetailsScreenProps> = ({ navigation, route }) => {
   const ActiveArray = [accountNumber, ifscCode, accountType, bankPassbook];
   let isActive = useActive(ActiveArray);
   let hasError = isError.some(error => error.hasError === true);
-  console.log("selectedDocument", selectedDocument);
-
+  console.log('selectedDocument', selectedDocument);
 
   return (
     <WaveBackground
-      loading={[VerifyBankAccountIsLoading, GetCashDetailsIsLoading, UploadAccStatementIsLoading, UploadDocumentsIsLoading, GetBankAccountDetailsIsLoading]}
+      loading={[
+        VerifyBankAccountIsLoading,
+        GetCashDetailsIsLoading,
+        UploadAccStatementIsLoading,
+        UploadDocumentsIsLoading,
+        GetBankAccountDetailsIsLoading,
+      ]}
       title={'Bank Details'}>
-
       <Modal
         title="Account Verification FAILED"
         status="failure"
@@ -302,36 +329,39 @@ const BankDetails: FC<BankDetailsScreenProps> = ({ navigation, route }) => {
           // setIfscCode('');
           setIsVisibleModal(false);
         }}
-        message={
-          `The account number & IFSC Code you entered is not valid, Please review the account number and IFSC Code.`
-        }
+        message={`The account number & IFSC Code you entered is not valid, Please review the account number and IFSC Code.`}
         visible={isVisibleModal}
         buttonTitle="Okay"
       />
 
-      {isCashVisible && 
-      <View style={{}}>
-        <Button
-          text={'Skip'}
-          active
-          marginVertical={10}
-          flexEnd
-          // marginTop={30}
-          halfSize
-          onPress={() => {
-            navigation.navigate('RepaymentDetails');
-          }}
-        />
-      </View>}
+      {isCashVisible && (
+        <View style={{}}>
+          <Button
+            text={'Skip'}
+            active
+            marginVertical={10}
+            flexEnd
+            // marginTop={30}
+            halfSize
+            onPress={() => {
+              navigation.navigate('RepaymentDetails');
+            }}
+          />
+        </View>
+      )}
 
       <LabelDropdown
         label="Applicant Type"
         open={applicantTypeOpen}
         setDropdownOpen={setApplicantTypeOpen}
         defaultValue={applicantType}
-        options={guarantorId == '' ? ['Main Applicant'] : ['Main Applicant', 'Guarantor']}
+        options={
+          guarantorId == ''
+            ? ['Main Applicant']
+            : ['Main Applicant', 'Guarantor']
+        }
         setSelectedOption={setApplicantType}
-        setSelectedItem={item => { }}
+        setSelectedItem={item => {}}
         isChange={setIsChanged}
         mandatory
         zIndex={applicantTypeOpen ? 1000 : 0}
@@ -370,7 +400,7 @@ const BankDetails: FC<BankDetailsScreenProps> = ({ navigation, route }) => {
         defaultValue={accountType}
         options={['Current Account', 'Saving Account']}
         setSelectedOption={setAccountType}
-        setSelectedItem={item => { }}
+        setSelectedItem={item => {}}
         isChange={setIsChanged}
         mandatory
         zIndex={accountTypeOpen ? 1000 : 0}
@@ -379,7 +409,7 @@ const BankDetails: FC<BankDetailsScreenProps> = ({ navigation, route }) => {
 
       <LabeledUploadMultiDocument
         label={'Bank Passbook'}
-        onPress={() => { }}
+        onPress={() => {}}
         imageOnly
         mandatory
         setBase64={setBankPassbookBase64}
@@ -389,45 +419,43 @@ const BankDetails: FC<BankDetailsScreenProps> = ({ navigation, route }) => {
         buttonDisable={bankPassbook ? true : false}
       />
 
-      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{justifyContent: 'center', alignItems: 'center'}}>
         {bankPassbookDocType == 'pdf' && bankPassbook ? (
-          <View
-            style={Styles.pdfContainer}>
-            {(
+          <View style={Styles.pdfContainer}>
+            {
               <TouchableOpacity
                 style={Styles.pdfSubContainer}
                 disabled={isViewOnly}
                 onPress={() => {
-                  setSelectedDocument('Bank Passbook')
+                  setSelectedDocument('Bank Passbook');
                 }}>
                 <Icon name="close" />
               </TouchableOpacity>
-            )}
+            }
             <Icon name="prePdf" />
           </View>
-        ) :
-          bankPassbook ? (
-            <View style={{ width: '100%', marginVertical: 10 }}>
-              <Image
-                source={{ uri: bankPassbook }}
-                style={Styles.imgContainer}
-                resizeMode="stretch"
-              />
-              <TouchableOpacity
-                style={Styles.imgSubContainer}
-                disabled={isViewOnly}
-                onPress={() => {
-                  setSelectedDocument('Bank Passbook')
-                }}>
-                <Icon name="close" />
-              </TouchableOpacity>
-            </View>
-          ) : null}
+        ) : bankPassbook ? (
+          <View style={{width: '100%', marginVertical: 10}}>
+            <Image
+              source={{uri: bankPassbook}}
+              style={Styles.imgContainer}
+              resizeMode="stretch"
+            />
+            <TouchableOpacity
+              style={Styles.imgSubContainer}
+              disabled={isViewOnly}
+              onPress={() => {
+                setSelectedDocument('Bank Passbook');
+              }}>
+              <Icon name="close" />
+            </TouchableOpacity>
+          </View>
+        ) : null}
       </View>
 
       <LabeledUploadMultiDocument
         label={'Account Statement'}
-        onPress={() => { }}
+        onPress={() => {}}
         imageOnly
         setBase64={setAccStatementBase64}
         setUrl={setAccStatement}
@@ -436,41 +464,38 @@ const BankDetails: FC<BankDetailsScreenProps> = ({ navigation, route }) => {
         buttonDisable={accStatement ? true : false}
       />
 
-      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-        {accStatementDocType == 'pdf' && accStatement ?
-          (
-            <View style={Styles.pdfContainer}>
-              {(
-                <TouchableOpacity
-                  style={Styles.pdfSubContainer}
-                  disabled={isViewOnly}
-                  onPress={() => {
-                    setSelectedDocument('Account Statement')
-                  }}>
-                  <Icon name="close" />
-                </TouchableOpacity>
-              )}
-              <Icon name="prePdf" />
-            </View>
-          ) :
-          accStatement ? (
-            <View style={{ width: '100%', marginVertical: 10 }}>
-              <Image
-                source={{ uri: accStatement }}
-                style={Styles.imgContainer}
-                resizeMode="stretch"
-              />
+      <View style={{justifyContent: 'center', alignItems: 'center'}}>
+        {accStatementDocType == 'pdf' && accStatement ? (
+          <View style={Styles.pdfContainer}>
+            {
               <TouchableOpacity
-                style={Styles.imgSubContainer}
+                style={Styles.pdfSubContainer}
                 disabled={isViewOnly}
                 onPress={() => {
-                  setSelectedDocument('Account Statement')
+                  setSelectedDocument('Account Statement');
                 }}>
                 <Icon name="close" />
               </TouchableOpacity>
-            </View>
-          ) : null
-        }
+            }
+            <Icon name="prePdf" />
+          </View>
+        ) : accStatement ? (
+          <View style={{width: '100%', marginVertical: 10}}>
+            <Image
+              source={{uri: accStatement}}
+              style={Styles.imgContainer}
+              resizeMode="stretch"
+            />
+            <TouchableOpacity
+              style={Styles.imgSubContainer}
+              disabled={isViewOnly}
+              onPress={() => {
+                setSelectedDocument('Account Statement');
+              }}>
+              <Icon name="close" />
+            </TouchableOpacity>
+          </View>
+        ) : null}
       </View>
       {bankName && (
         <LabeledTextInput
@@ -497,7 +522,8 @@ const BankDetails: FC<BankDetailsScreenProps> = ({ navigation, route }) => {
         />
       )}
       {(VerifyBankAccountData?.nameMatch === 'Y' ||
-        GetBankAccountDetailsData?.nameMatch === 'Y') && !isChanged && (
+        GetBankAccountDetailsData?.nameMatch === 'Y') &&
+        !isChanged && (
           <View
             style={{
               flexDirection: 'row',
@@ -520,9 +546,7 @@ const BankDetails: FC<BankDetailsScreenProps> = ({ navigation, route }) => {
           </View>
         )}
 
-
-
-      <View style={{ marginVertical: '10%' }}>
+      <View style={{marginVertical: '10%'}}>
         <Button
           text={isChanged ? 'Verify' : 'Next'}
           active={isActive && !hasError}
@@ -533,8 +557,11 @@ const BankDetails: FC<BankDetailsScreenProps> = ({ navigation, route }) => {
               : navigation.navigate('RepaymentDetails');
           }}
         />
-        {
-          !isNachReactivation && <LoanSummaryButton onPress={() => navigation.replace('LoanSummary')} />}
+        {!isNachReactivation && (
+          <LoanSummaryButton
+            onPress={() => navigation.replace('LoanSummary')}
+          />
+        )}
       </View>
     </WaveBackground>
   );
@@ -572,6 +599,5 @@ const Styles = StyleSheet.create({
     backgroundColor: 'transparent',
     alignSelf: 'flex-end',
     paddingHorizontal: '5%',
-  }
-
-})
+  },
+});
