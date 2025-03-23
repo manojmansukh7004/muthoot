@@ -1456,13 +1456,7 @@ const LoanDetails: FC<LoanDetailsScreenProps> = ({navigation}) => {
         GetRefrence.mutateAsync();
         setIsChanged(false);
       }
-      // const onBackPress = () => {
-      //   navigation.navigate('DelarshipDetails');
-      //   return true;
-      // };
-      // BackHandler.addEventListener('hardwareBackPress', onBackPress);
-      // return () =>
-      //   BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+     
     }, []),
   );
 

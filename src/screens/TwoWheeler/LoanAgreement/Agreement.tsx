@@ -4,7 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import WaveBackground from 'components/WaveBackground';
 import { RootStackParamList } from 'navigation/HomeStack/TwoWheelerStack';
 import WebView from 'react-native-webview';
-import { BackHandler, Dimensions } from 'react-native';
+import { BackHandler, Dimensions, Platform } from 'react-native';
 
 type AgreementNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -36,13 +36,22 @@ console.log("mfff",route.params?.webRedirectionUrl);
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => {
-        navigation.navigate('LoanAgreement');
-        return true;
+        navigation.navigate('LoanAgreement'); // Navigate to 'LoanAgreement' screen
+        return true; // Prevent default back behavior on Android
       };
-      BackHandler.addEventListener('hardwareBackPress', onBackPress);
-      return () =>
-        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
-    }, []),
+  
+      if (Platform.OS === 'android') {
+        const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+        return () => backHandler.remove(); // Proper cleanup
+      } else {
+        const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+          e.preventDefault(); // Prevent default back gesture behavior on iOS
+          navigation.navigate('LoanAgreement'); // Manually navigate
+        });
+  
+        return () => unsubscribe();
+      }
+    }, [])
   );
   return (
     <WaveBackground loading={[]} title={'Loan Agreement'}>

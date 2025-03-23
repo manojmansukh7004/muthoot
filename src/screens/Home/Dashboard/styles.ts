@@ -80,7 +80,7 @@ export const styles = StyleSheet.create({
     borderColor: Colors.LightGrey,
     backgroundColor: Colors.White,
     borderRadius: 15,
-    elevation: 3,
+    // elevation: 3,
     alignItems: "center",
     justifyContent: "space-around",
     padding: 10,
@@ -125,6 +125,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: '5%',
     marginVertical: '10%',
     height: '100%',
+    // backgroundColor: 'red'
   },
   dbStyle: {
     alignItems: 'center',

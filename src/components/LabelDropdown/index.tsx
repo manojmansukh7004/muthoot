@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     // minHeight: 20,
     marginTop: 10,
-    height: 'auto',
+    height: 'auto',       
     paddingVertical: 3.5,
     backgroundColor: 'transparent',
   },

@@ -2,13 +2,14 @@ import { StyleSheet } from "react-native"
 import Colors from "config/Colors"
 import { APP_FONTS, FONT_SIZE } from "config/Fonts"
 import useFontNormalise from "hooks/useFontNormalise";
-
+import { Platform} from 'react-native'
 
 const styles=StyleSheet.create({
     containerbox:{
         width:'100%',
         marginVertical:12,
-        alignSelf:'center'
+        alignSelf:'center',
+        // backgroundColor: 'red'
     },
     inputbox:{
         borderRadius:15,
@@ -19,7 +20,10 @@ const styles=StyleSheet.create({
         color:Colors.Black,
         fontSize:useFontNormalise(14),
         paddingVertical:8,
-        height:'auto'
+        height: 
+        Platform.OS == 'android' ? useFontNormalise(42): useFontNormalise(35),
+        // height: 'auto',       
+
     },
     labelStyle:{
         fontFamily:APP_FONTS.Medium,

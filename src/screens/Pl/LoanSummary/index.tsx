@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
-import { Text, View, ScrollView, TouchableOpacity, BackHandler } from 'react-native';
+import { Text, View, ScrollView, TouchableOpacity, BackHandler, Platform } from 'react-native';
 import { RouteProp, useFocusEffect } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useGetCKYCStatus } from 'api/ReactQuery/PL/CKYC';
@@ -371,9 +371,33 @@ const LoanSummary: FC<LoanSummaryScreenProps> = ({ navigation, route }) => {
           navigation.navigate('LeadManagement')
         return true;
       };
-      BackHandler.addEventListener('hardwareBackPress', onBackPress);
-      return () =>
-        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+      if (Platform.OS === 'android') {
+             const backHandler = BackHandler.addEventListener(
+               'hardwareBackPress',
+               onBackPress,
+             );
+             return () => backHandler.remove(); // ✅ Cleanup
+           } else {
+             console.log('mjjjjj');
+     
+             const onBeforeRemove = (e: any) => {
+               if (e.data.action.type === 'GO_BACK') {
+                 e.preventDefault();
+                 if (masterLogin === 'true') {
+                   console.log('iiiiiii');
+     
+                   navigation.navigate('Dashboard');
+                 } else {
+                   console.log('eeeeee');
+                   navigation.dispatch(e.data.action);
+                   // navigation.navigate('LeadManagement');
+                 }
+               }
+             };
+     
+             navigation.addListener('beforeRemove', onBeforeRemove);
+             return () => navigation.removeListener('beforeRemove', onBeforeRemove);
+           }
     }, []),
   );
 

@@ -1,7 +1,7 @@
 import Colors from 'config/Colors';
 import { APP_FONTS, FONT_SIZE } from 'config/Fonts';
 import useFontNormalise from 'hooks/useFontNormalise';
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet, Dimensions, Platform } from 'react-native';
 
 const { height, width } = Dimensions.get('screen');
 
@@ -54,7 +54,7 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
   },
   Selection: {
-    paddingVertical: 5,
+    paddingVertical: 9,
     borderRadius: 10,
     marginHorizontal: 20,
     backgroundColor: Colors.Button,
@@ -62,7 +62,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   UnSelected: {
-    paddingVertical: 5,
+    paddingVertical: 9,
     borderRadius: 10,
     // marginHorizontal: 20,
     justifyContent: 'center',
@@ -104,11 +104,11 @@ export const styles = StyleSheet.create({
   listBoxStyle: {
     flex: 1,
     backgroundColor: Colors.White,
-    shadowColor: Colors.Black,
-    shadowOpacity: 1,
-    shadowRadius: 2,
-    shadowOffset: { height: 0.5, width: 0.5 },
-    elevation: 1,
+    // shadowColor: Colors.Black,
+    // shadowOpacity: 1,
+    // shadowRadius: 2,
+    // shadowOffset: { height: 0.5, width: 0.5 },
+    // elevation: 1,
     borderWidth: 1,
     borderColor: Colors.LightGrey,
     marginBottom: 10,
@@ -135,7 +135,7 @@ export const styles = StyleSheet.create({
   lableStyle: {
     color: Colors.LabelGrey,
     fontFamily: APP_FONTS.Roboto_Regular,
-    fontSize: FONT_SIZE.m,
+    fontSize: Platform.OS == 'android'? FONT_SIZE.m: FONT_SIZE.m,
     marginTop: 5,
     paddingHorizontal: 3
 
@@ -143,7 +143,7 @@ export const styles = StyleSheet.create({
   dataStyle: {
     color: Colors.Black,
     fontFamily: APP_FONTS.Roboto_SemiBold,
-    fontSize: FONT_SIZE.l,
+    fontSize: Platform.OS == 'android'? FONT_SIZE.l: FONT_SIZE.l,
     marginTop: 4,
     paddingHorizontal: 3
   },

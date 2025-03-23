@@ -65,18 +65,7 @@ const ManualUnderwriting: FC<ManualUnderwritingScreenProps> = ({
     ).start();
   };
 
-  // useEffect(() => {
-  //   const onBackPress = () => {
-  //     navigation.navigate('LoanDetails');
-  //     return true;
-  //   };
-  //   if (isNavigateLoanOffer) {
-  //     BackHandler.addEventListener('hardwareBackPress', onBackPress);
-  //     return () => {
-  //       BackHandler.removeEventListener('hardwareBackPress', onBackPress);
-  //     };
-  //   }
-  // }, []);
+ 
 
    useFocusEffect(
       React.useCallback(() => {
@@ -97,7 +86,7 @@ const ManualUnderwriting: FC<ManualUnderwritingScreenProps> = ({
   
           return unsubscribe; // Remove event listener when unmounted
         }
-      }, [navigation]),
+      }, []),
     );
   
 

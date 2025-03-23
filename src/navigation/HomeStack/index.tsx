@@ -8,7 +8,7 @@ import TwoWheelerStack from './TwoWheelerStack';
 
 const HomeStack = () => {
     const { isLoggedIn, isLoggedOut } = useAuthentication();
-    if (!isLoggedIn) {
+    if (isLoggedIn) {
         return (
             <DashboardStack />
             // <TwoWheelerStack/>

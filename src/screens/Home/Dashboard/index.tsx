@@ -1,7 +1,7 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp, useFocusEffect } from '@react-navigation/native';
-import { Text, TouchableOpacity, View, ScrollView } from 'react-native';
+import { Text, TouchableOpacity, View, ScrollView, Platform } from 'react-native';
 import Icon from 'components/Icon';
 import WaveBackground from 'components/WaveBackground';
 import { RootStackParamList } from 'navigation/HomeStack/TwoWheelerStack';
@@ -81,29 +81,33 @@ const Dashboard: FC<DashboardScreenProps> = ({ navigation, route }) => {
   ] = useGetPlCount(`?employeeId=${employeeId}`);
 
   useFocusEffect(
-    React.useCallback(() => {
-      ViewCount.mutateAsync()
-      // ViewPlCount.mutateAsync()
+    useCallback(() => {
+      ViewCount.mutateAsync();
+      ViewPlCount.mutateAsync();
+  
       const onBackPress = () => {
-        // navigation.navigate('Dashboard')
-        Alert.alert('Hold on!', 'Are you sure you want to quit application?', [
-          {
-            text: 'No',
-            onPress: () => null,
-            style: 'cancel',
-          },
+        Alert.alert('Hold on!', 'Are you sure you want to quit the application?', [
+          { text: 'No', onPress: () => null, style: 'cancel' },
           { text: 'YES', onPress: () => BackHandler.exitApp() },
         ]);
         return true;
       };
-
-      BackHandler.addEventListener('hardwareBackPress', onBackPress);
-
-      return () =>
-        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
-    }, []),
+  
+      if (Platform.OS === 'android') {
+        const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+        return () => backHandler.remove();
+      } else {
+        const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+          e.preventDefault();
+          Alert.alert('Hold on!', 'Are you sure you want to quit the application?', [
+            { text: 'No', onPress: () => null, style: 'cancel' },
+            { text: 'YES', onPress: () => navigation.goBack() },
+          ]);
+        });
+        return () => unsubscribe();
+      }
+    }, [])
   );
-
 
   return (
     <Drawer
@@ -150,7 +154,8 @@ const Dashboard: FC<DashboardScreenProps> = ({ navigation, route }) => {
               <View
                 style={styles.dbStyle}>
                 <CircleDiv imgage={'nachReactivation'} title={'NACH Reactivation'} count={''} />
-                {ViewProspectData?.masterLogin &&
+                {
+                ViewProspectData?.masterLogin &&
                   <CircleDiv imgage={'admin'} title={'Master Login'} count={''} />}
               </View>
               {/* <View

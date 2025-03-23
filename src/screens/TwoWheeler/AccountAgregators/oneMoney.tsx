@@ -90,17 +90,7 @@ const OneMoney: FC<OneMoneyScreenProps> = ({ navigation, route }) => {
 
 
   }, []);
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     const onBackPress = () => {
-  //       navigation.navigate('ProductDetails');
-  //       return true;
-  //     };
-  //     BackHandler.addEventListener('hardwareBackPress', onBackPress);
-  //     return () =>
-  //       BackHandler.removeEventListener('hardwareBackPress', onBackPress);
-  //   }, []),
-  // );
+
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => {

@@ -1,5 +1,5 @@
-import React, { ReactNode, Children } from 'react';
-import { ScrollView, StyleSheet, View, Dimensions } from 'react-native';
+import React, {ReactNode, Children} from 'react';
+import {ScrollView, StyleSheet, View, Dimensions} from 'react-native';
 
 import Colors from 'config/Colors';
 import StatusBar from 'components/StatusBar';
@@ -22,9 +22,8 @@ type WaveBackgroundType = {
   isMasterApp?: boolean;
   onPress?: () => void;
   language?: boolean;
-  
 };
-const { height } = Dimensions.get('screen');
+const {height} = Dimensions.get('screen');
 const WaveBackground = ({
   children,
   backgroundColor = Colors.Secondary,
@@ -37,7 +36,7 @@ const WaveBackground = ({
   isProcessingScreen,
   isMasterApp,
   onPress,
-  language
+  language,
 }: WaveBackgroundType) => {
   const isLoading = Object.values(loading).some(value => value);
   const modifiedChildren = Children.map(children, child => {
@@ -55,12 +54,14 @@ const WaveBackground = ({
   });
 
   return (
-    <View style={[styles.container, { backgroundColor: Colors.Primary }]}>
-      <StatusBar
-        backgroundColor={title ? Colors.Primary : backgroundColor}
-        barStyle={'light-content'}
-      />
-      <SessionExpiredPopup/>
+    <View style={[styles.container, {backgroundColor: Colors.Primary}]}>
+      {title && (
+        <StatusBar
+          backgroundColor={title ? Colors.Primary : backgroundColor}
+          barStyle={'light-content'}
+        />
+      )}
+      <SessionExpiredPopup />
       {title && title !== 'login' && (
         <Header
           title={title}
@@ -75,79 +76,75 @@ const WaveBackground = ({
 
       {title == 'Account Aggregator ' ? (
         <ScrollView>
-          <View style={[styles.loginScreen, { backgroundColor }]}>
+          <View style={[styles.loginScreen, {backgroundColor}]}>
             {modifiedChildren}
           </View>
         </ScrollView>
-      ) :
-        title == 'KFS (Key Fact Statement)' ? (
-          <View
-            style={[
-              styles.padding,
-              {
-                // paddingHorizontal: paddingHorizontal,
-                // paddingVertical: paddingVertical,
-                borderTopRightRadius: title ? 20 : 0,
-                backgroundColor: Colors.Secondary,
-                borderTopLeftRadius: title ? 20 : 0,
-                flex: 1,
-                //  backgroundColor: 'white'
-              },
-            ]}>
-            {/* <ScrollView
+      ) : title == 'KFS (Key Fact Statement)' ? (
+        <View
+          style={[
+            styles.padding,
+            {
+              // paddingHorizontal: paddingHorizontal,
+              // paddingVertical: paddingVertical,
+              borderTopRightRadius: title ? 20 : 0,
+              backgroundColor: Colors.Secondary,
+              borderTopLeftRadius: title ? 20 : 0,
+              flex: 1,
+              //  backgroundColor: 'white'
+            },
+          ]}>
+          {/* <ScrollView
               nestedScrollEnabled={true}
               showsVerticalScrollIndicator={false}> */}
+          {modifiedChildren}
+          {/* </ScrollView> */}
+        </View>
+      ) : title || PureScreen ? (
+        <ScrollView
+          // scrollEnabled={false}
+          nestedScrollEnabled={true}
+          keyboardShouldPersistTaps={'always'}
+          style={[
+            styles.content,
+            {
+              borderTopRightRadius: title ? 20 : 0,
+              backgroundColor: Colors.Secondary,
+              borderTopLeftRadius: title ? 20 : 0,
+            },
+          ]}
+          scrollsToTop
+          // contentContainerStyle={{   alignItems:'center',justifyContent:'center'}}
+          showsVerticalScrollIndicator={false}>
+          {title === 'login' ? (
+            <View style={[styles.loginScreen, {backgroundColor}]}>
               {modifiedChildren}
-            {/* </ScrollView> */}
-          </View>
-        ) :
-          title || PureScreen ? (
-            <ScrollView
-              // scrollEnabled={false}
-              nestedScrollEnabled={true}
-              keyboardShouldPersistTaps={'always'}
-              style={[
-                styles.content,
-                {
-                  borderTopRightRadius: title ? 20 : 0,
-                  backgroundColor: Colors.Secondary,
-                  borderTopLeftRadius: title ? 20 : 0,
-                },
-              ]}
-              scrollsToTop
-              // contentContainerStyle={{   alignItems:'center',justifyContent:'center'}}
-              showsVerticalScrollIndicator={false}>
-              {title === 'login' ? (
-                <View style={[styles.loginScreen, { backgroundColor }]}>
-                  {modifiedChildren}
-                </View>
-              ) : PureScreen ? (
-                <>{modifiedChildren}</>
-              ) : (
-                <View
-                  style={[
-                    styles.padding,
-                    {
-                      paddingHorizontal: paddingHorizontal,
-                      paddingVertical: paddingVertical,
-                    },
-                  ]}>
-                  {modifiedChildren}
-                </View>
-              )}
-            </ScrollView>
+            </View>
+          ) : PureScreen ? (
+            <>{modifiedChildren}</>
           ) : (
-            // <ScrollView >
-            <LinearGradient
-              colors={[Colors.Secondary, Colors.Primary]}
-              style={[styles.linearGradient, { flex: 1, }]}
-              start={{ x: 1, y: 0 }}
-              end={{ x: 0, y: 1 }}>
-              <StatusBar backgroundColor={Colors.White} barStyle={false} />
+            <View
+              style={[
+                styles.padding,
+                {
+                  paddingHorizontal: paddingHorizontal,
+                  paddingVertical: paddingVertical,
+                },
+              ]}>
               {modifiedChildren}
-            </LinearGradient>
-            // </ScrollView>
+            </View>
           )}
+        </ScrollView>
+      ) : (
+        <LinearGradient
+          colors={[Colors.Secondary, Colors.Primary]}
+          style={[styles.linearGradient, {backgroundColor: 'green'}]}
+          start={{x: 1, y: 0}}
+          end={{x: 0, y: 1}}>
+          <StatusBar backgroundColor={Colors.White} barStyle={false} />
+          {modifiedChildren}
+        </LinearGradient>
+      )}
       {isLoading && (
         <LoadingScreen
           isProcessingScreen={isProcessingScreen}
@@ -183,9 +180,9 @@ const styles = StyleSheet.create({
     paddingVertical: 25,
   },
   linearGradient: {
-    // flex: 1,
-    paddingLeft: 15,
-    paddingRight: 15,
+    flex: 1,
+    // marginHorizontal: 15,
+    // paddingRight: 15,
     borderRadius: 5,
     height: height,
   },

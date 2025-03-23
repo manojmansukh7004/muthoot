@@ -1,5 +1,5 @@
 import React, {Dispatch, SetStateAction, FC, useState} from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image, Platform} from 'react-native';
 import {Dropdown} from 'react-native-element-dropdown';
 
 import Colors from 'config/Colors';
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 10,
     marginTop: 10,
-    height: 'auto',
+    height:        Platform.OS == 'android' ? useFontNormalise(42): useFontNormalise(39)    ,
     paddingVertical: 6,
     backgroundColor: 'transparent',
   },

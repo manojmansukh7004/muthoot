@@ -60,7 +60,7 @@ const LeadManagement: FC<LeadManagementScreenProps> = ({navigation}) => {
   const [expanded, setExpanded] = useState<boolean>(false);
   const animationValue = useRef(new Animated.Value(0)).current;
   const [isVisibleModal, setIsVisibleModal] = useState(false);
-  const movementRangePercentage = useFontNormalise(38);
+  const movementRangePercentage = useFontNormalise(45);
   const movementRange = (screenWidth * movementRangePercentage) / 150;
 
   const animatedStyle = {
@@ -143,44 +143,6 @@ const LeadManagement: FC<LeadManagementScreenProps> = ({navigation}) => {
       ViewUnAllocated.mutateAsync();
     }, []),
   );
-
-
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     const onBackPress = () => {
-  //       navigation.replace('Dashboard'); // Replace current screen with Dashboard
-  //       return true; // Prevent default behavior (Android)
-  //     };
-
-  //     if (Platform.OS === 'android') {
-  //       const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
-  //       return () => backHandler.remove(); // ✅ Correct way in RN 0.78.0+
-  //     } else {
-  //       // Handle iOS back gesture using navigation listener
-  //       const unsubscribe = navigation.addListener('beforeRemove', (e) => {
-  //         e.preventDefault(); // Prevent default back navigation
-  //         navigation.replace('Dashboard'); // Navigate manually
-  //       });
-
-  //       return unsubscribe; // Remove event listener when unmounted
-  //     }
-  //   }, [navigation]),
-  // );
-
-  //  useFocusEffect(
-  //       React.useCallback(() => {
-  //         if (Platform.OS === 'android') {
-  //           const onBackPress = () => {
-  //             navigation.replace('Dashboard');
-  //             return true;
-  //           };
-    
-  //           const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
-    
-  //           return () => backHandler.remove(); // ✅ Correct way to remove listener in RN 0.78.0+
-  //         }
-  //       }, [navigation]),
-  //     );
 
   useFocusEffect(
     React.useCallback(() => {

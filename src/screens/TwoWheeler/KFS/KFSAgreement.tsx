@@ -4,7 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import WaveBackground from 'components/WaveBackground';
 import { RootStackParamList } from 'navigation/HomeStack/TwoWheelerStack';
 import WebView from 'react-native-webview';
-import { BackHandler, Dimensions } from 'react-native';
+import { BackHandler, Dimensions, Platform } from 'react-native';
 
 type KFSAgreementNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -31,13 +31,22 @@ const KFSAgreement: FC<KFSAgreementScreenProps> = ({ navigation, route }) => {
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => {
-        navigation.navigate('KFS');
-        return true;
+        navigation.navigate('KFS'); // Navigate to 'KFS' screen
+        return true; // Prevent default back behavior
       };
-      BackHandler.addEventListener('hardwareBackPress', onBackPress);
-      return () =>
-        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
-    }, []),
+  
+      if (Platform.OS === 'android') {
+        const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+        return () => backHandler.remove();
+      } else {
+        const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+          e.preventDefault(); // Prevent default navigation
+          navigation.navigate('KFS'); // Navigate manually
+        });
+  
+        return () => unsubscribe();
+      }
+    }, [])
   );
   return (
     <WaveBackground loading={[]} title={'KFS Agreement'}>

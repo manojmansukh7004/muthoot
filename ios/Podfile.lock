@@ -1861,6 +1861,27 @@ PODS:
     - React-Core
     - React-RCTImage
     - TOCropViewController (~> 2.7.4)
+  - RNKeychain (9.2.3):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNReanimated (3.17.1):
     - DoubleConversion
     - glog
@@ -2156,6 +2177,7 @@ DEPENDENCIES:
   - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
+  - RNKeychain (from `../node_modules/react-native-keychain`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
@@ -2331,6 +2353,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-gesture-handler"
   RNImageCropPicker:
     :path: "../node_modules/react-native-image-crop-picker"
+  RNKeychain:
+    :path: "../node_modules/react-native-keychain"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
@@ -2423,6 +2447,7 @@ SPEC CHECKSUMS:
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNGestureHandler: 9b05fab9a0b48fe48c968de7dbb9ca38a2b4f7ab
   RNImageCropPicker: 64b6bec9ec185ee59b71a93d7058816bd0e1916e
+  RNKeychain: 9524b2d1e91e3a9f5074c1c94f5746989a8d3d11
   RNReanimated: ff71ce0443c71c8a77501ace7b9738ede83cfa55
   RNScreens: 9a887b38fbb9c207f0d4e9694037c91e4fd6b248
   RNSVG: 8588ee1ca9b2e6fd2c99466e35b3db0e9f81bb40

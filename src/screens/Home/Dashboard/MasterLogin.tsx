@@ -1,5 +1,5 @@
 import React, {FC, useCallback, useEffect, useState} from 'react';
-import {BackHandler} from 'react-native';
+import {BackHandler, Platform} from 'react-native';
 import {RouteProp, useFocusEffect} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import WaveBackground from 'components/WaveBackground';
@@ -95,37 +95,29 @@ const MasterLogin: FC<MasterLoginScreenProps> = ({navigation, route}) => {
     }
   }, [appId]);
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     const resetDataAndSetLogin = async () => {
-  //       ResetApplcantDetails();
-  //       // await AsyncStorage.setItem('ismasterLogin', 'false');
-  //       // await Keychain.setGenericPassword('ismasterLogin', 'false');
-  //       await updateMasterLogin('false');
-  //     };
 
-  //     resetDataAndSetLogin();
-  //     BackHandler.addEventListener('hardwareBackPress', handleBackPress);
-  //     return () => {
-  //       BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
-  //     };
-  //   }, [handleBackPress]),
-  // );
-  useFocusEffect(
-    useCallback(() => {
-        const resetDataAndSetLogin = async () => {
-            ResetApplcantDetails();
-            // await AsyncStorage.setItem('ismasterLogin', 'false');
-            await updateMasterLogin('false');
+useFocusEffect(
+  useCallback(() => {
+    const resetDataAndSetLogin = async () => {
+      ResetApplcantDetails();
+      await updateMasterLogin('false');
+    };
 
-        };
+    resetDataAndSetLogin();
 
-        resetDataAndSetLogin();
-        BackHandler.addEventListener('hardwareBackPress', handleBackPress);
-        return () => {
-            BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
-        };
-    }, [handleBackPress])
+    if (Platform.OS === 'android') {
+      const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+      return () => backHandler.remove(); // ✅ Correct cleanup for Android
+    } else {
+      // Handle iOS back gesture using navigation listener
+      const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+        e.preventDefault(); // Prevent default back navigation
+        handleBackPress(); // Handle manually
+      });
+
+      return unsubscribe; // ✅ Correct cleanup for iOS
+    }
+  }, [handleBackPress])
 );
 
   return (

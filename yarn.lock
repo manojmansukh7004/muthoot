@@ -2816,9 +2816,9 @@ camelcase@^6.2.0:
   integrity sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==
 
 caniuse-lite@^1.0.30001688:
-  version "1.0.30001706"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001706.tgz#902c3f896f4b2968031c3a546ab2ef8b465a2c8f"
-  integrity sha512-3ZczoTApMAZwPKYWmwVbQMFpXBDds3/0VciVoUwPUbldlYyVLmRVuRs/PcUZtHpbLRpzzDvrvnFuREsGt6lUug==
+  version "1.0.30001707"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001707.tgz#c5e104d199e6f4355a898fcd995a066c7eb9bf41"
+  integrity sha512-3qtRjw/HQSMlDWf+X79N206fepf4SOOU6SQLMaq/0KkZLmSjPxAkBOQQ+FxbHKfHmYLZFfdWsO3KA90ceHPSnw==
 
 chalk@^4.0.0, chalk@^4.1.0, chalk@^4.1.2:
   version "4.1.2"
@@ -6236,13 +6236,6 @@ react-native-device-info@^14.0.4:
   resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-14.0.4.tgz#56b24ace9ff29a66bdfc667209086421ed6cfdce"
   integrity sha512-NX0wMAknSDBeFnEnSFQ8kkAcQrFHrG4Cl0mVjoD+0++iaKrOupiGpBXqs8xR0SeJyPC5zpdPl4h/SaBGly6UxA==
 
-react-native-document-picker@^9.3.1:
-  version "9.3.1"
-  resolved "https://registry.yarnpkg.com/react-native-document-picker/-/react-native-document-picker-9.3.1.tgz#f2c33237a906fd0893130e0605c8f18a3aef1605"
-  integrity sha512-Vcofv9wfB0j67zawFjfq9WQPMMzXxOZL9kBmvWDpjVuEcVK73ndRmlXHlkeFl5ZHVsv4Zb6oZYhqm9u5omJOPA==
-  dependencies:
-    invariant "^2.2.4"
-
 react-native-drawer-layout@^4.1.1, react-native-drawer-layout@^4.1.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/react-native-drawer-layout/-/react-native-drawer-layout-4.1.2.tgz#52b3fa3ae0486e8414d8efc648c8b13a0ba47744"
@@ -6308,6 +6301,11 @@ react-native-is-edge-to-edge@1.1.6:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/react-native-is-edge-to-edge/-/react-native-is-edge-to-edge-1.1.6.tgz#69ec13f70d76e9245e275eed4140d0873a78f902"
   integrity sha512-1pHnFTlBahins6UAajXUqeCOHew9l9C2C8tErnpGC3IyLJzvxD+TpYAixnCbrVS52f7+NvMttbiSI290XfwN0w==
+
+react-native-keychain@^9.2.3:
+  version "9.2.3"
+  resolved "https://registry.yarnpkg.com/react-native-keychain/-/react-native-keychain-9.2.3.tgz#d21d88a39847c8910fe1e18f8280a4a32a24a6bc"
+  integrity sha512-dbn50fk4HLr4JQ71X3j6ZSTbKv+G9s85Zv9cE2na7k7KGn1j+wxjqGTE3wG+WKB3nNEylgu/KXR99mtsC/hpRQ==
 
 react-native-linear-gradient@^2.8.3:
   version "2.8.3"

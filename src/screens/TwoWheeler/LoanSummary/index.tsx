@@ -1,29 +1,35 @@
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
-import { Text, View, ScrollView, TouchableOpacity, BackHandler, Platform } from 'react-native';
-import { RouteProp, useFocusEffect } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { useGetCKYCStatus } from 'api/ReactQuery/TwoWheeler/CKYC';
-import { GetCKYCStatusRequest } from 'api/ReactQuery/TwoWheeler/CKYC/types';
-import { ApplicantStatus } from 'api/ReactQuery/TwoWheeler/Lead/types';
-import { useViewStatus } from 'api/ReactQuery/TwoWheeler/Lead';
-import WaveBackground from 'components/WaveBackground';
-import SummaryCard, { qdeSectionsType } from 'components/SummaryCard';
-import { useApplicantDetails, } from 'context/useApplicantDetails';
-
-import { useCKYCData } from 'context/useCKYCData';
-import { usedViewStatus } from 'context/useViewStatus';
-import { RootStackParamList } from 'navigation/HomeStack/TwoWheelerStack';
-import { useEmployeeDetails } from 'context/useEmployeeDetails';
-import { applicantType } from 'api/ReactQuery/TwoWheeler';
-import { ScreenNames, applicantTypeObect } from 'config/Types';
-import { useGetSanctionLetterDetails } from 'api/ReactQuery/TwoWheeler/Lead';
+import React, {FC, useCallback, useEffect, useMemo, useState} from 'react';
 import {
-  useGetCreditToSubmitDetails
-} from 'api/ReactQuery/TwoWheeler/Employment';
+  Text,
+  View,
+  ScrollView,
+  TouchableOpacity,
+  BackHandler,
+  Platform,
+} from 'react-native';
+import {RouteProp, useFocusEffect} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {useGetCKYCStatus} from 'api/ReactQuery/TwoWheeler/CKYC';
+import {GetCKYCStatusRequest} from 'api/ReactQuery/TwoWheeler/CKYC/types';
+import {ApplicantStatus} from 'api/ReactQuery/TwoWheeler/Lead/types';
+import {useViewStatus} from 'api/ReactQuery/TwoWheeler/Lead';
+import WaveBackground from 'components/WaveBackground';
+import SummaryCard, {qdeSectionsType} from 'components/SummaryCard';
+import {useApplicantDetails} from 'context/useApplicantDetails';
+
+import {useCKYCData} from 'context/useCKYCData';
+import {usedViewStatus} from 'context/useViewStatus';
+import {RootStackParamList} from 'navigation/HomeStack/TwoWheelerStack';
+import {useEmployeeDetails} from 'context/useEmployeeDetails';
+import {applicantType} from 'api/ReactQuery/TwoWheeler';
+import {ScreenNames, applicantTypeObect} from 'config/Types';
+import {useGetSanctionLetterDetails} from 'api/ReactQuery/TwoWheeler/Lead';
+import {useGetCreditToSubmitDetails} from 'api/ReactQuery/TwoWheeler/Employment';
 import styles from './styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Button from 'components/Button';
 import SessionExpiredPopup from 'components/SessionExpiredPopup';
+import {getSecureData} from 'api/Axios/TwoWheelerBaseurl';
 
 export type LoanSummaryNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -36,28 +42,37 @@ interface LoanSummaryScreenProps {
   route: LoanSummaryRouteProp;
 }
 
-const LoanSummary: FC<LoanSummaryScreenProps> = ({ navigation, route }) => {
-  const { applicantId, guarantorId, SetMainApplicant, SaveGuarantorId, SetGuarantor } = useApplicantDetails();
+const LoanSummary: FC<LoanSummaryScreenProps> = ({navigation, route}) => {
+  const {
+    applicantId,
+    guarantorId,
+    SetMainApplicant,
+    SaveGuarantorId,
+    SetGuarantor,
+  } = useApplicantDetails();
   // var applicantId = "MU358989"
   // const masterLogin = route?.params?.ismasterLogin;
 
-  const { employeeId } = useEmployeeDetails();
-  const { SaveCKYCData } = useCKYCData();
-  const { SaveViewStatus } = usedViewStatus();
-  const [applicantTypes, setApplicantTypes] = useState<applicantTypeObect[]>([{ applicantId, applicantType: 'mainApplicant' }]);
-  const [mainApplicantStatus, setMainApplicantStatus] = useState<ApplicantStatus>();
-  const [guarantorStatus, setGuarantorStatus,] = useState<ApplicantStatus>();
-  const [applicantType, setApplicantType] = useState<applicantType>('mainApplicant');
+  const {employeeId} = useEmployeeDetails();
+  const {SaveCKYCData} = useCKYCData();
+  const {SaveViewStatus} = usedViewStatus();
+  const [applicantTypes, setApplicantTypes] = useState<applicantTypeObect[]>([
+    {applicantId, applicantType: 'mainApplicant'},
+  ]);
+  const [mainApplicantStatus, setMainApplicantStatus] =
+    useState<ApplicantStatus>();
+  const [guarantorStatus, setGuarantorStatus] = useState<ApplicantStatus>();
+  const [applicantType, setApplicantType] =
+    useState<applicantType>('mainApplicant');
   const [isNextEnable, setIsNextEnable] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [masterLogin, setMasterLogin] = useState<string>('false');
   const [resetFlag, setResetFlag] = useState(false);
 
-
-
   const GetCKYCStatusRequest: GetCKYCStatusRequest = {
     appId: applicantType === 'mainApplicant' ? applicantId : guarantorId,
-    applicantType: applicantType === 'mainApplicant' ? 'mainApplicant' : 'guarantor',
+    applicantType:
+      applicantType === 'mainApplicant' ? 'mainApplicant' : 'guarantor',
     type: 'kycStatus',
     employeeId,
   };
@@ -70,19 +85,22 @@ const LoanSummary: FC<LoanSummaryScreenProps> = ({ navigation, route }) => {
     },
   ] = useGetSanctionLetterDetails(applicantId);
 
-
   useEffect(() => {
     if (GetSanctionLetterDetailsData) {
-      console.log("GetSanctionLetterDetailsDajjjta", GetSanctionLetterDetailsData);
-      setIsNextEnable(GetSanctionLetterDetailsData.isNextEnable );
+      console.log(
+        'GetSanctionLetterDetailsDajjjta',
+        GetSanctionLetterDetailsData,
+      );
+      setIsNextEnable(GetSanctionLetterDetailsData.isNextEnable);
     }
-  }, [GetSanctionLetterDetailsData])
+  }, [GetSanctionLetterDetailsData]);
 
+  const [
+    GetCKYCStatus,
+    {data: GetCKYCStatusData, isLoading: GetCKYCStatusDataIsLoading},
+  ] = useGetCKYCStatus(GetCKYCStatusRequest);
 
-  const [GetCKYCStatus, { data: GetCKYCStatusData, isLoading: GetCKYCStatusDataIsLoading }] =
-    useGetCKYCStatus(GetCKYCStatusRequest);
-
-  const [ViewStatus, { data: ViewStatusData, isLoading: ViewStatusIsLoading }] =
+  const [ViewStatus, {data: ViewStatusData, isLoading: ViewStatusIsLoading}] =
     useViewStatus(applicantId);
 
   // const memoizedViewStatusData = useMemo(
@@ -94,7 +112,7 @@ const LoanSummary: FC<LoanSummaryScreenProps> = ({ navigation, route }) => {
   const memoizedViewStatusData = useMemo(() => {
     if (resetFlag) {
       setResetFlag(false);
-      return [];  // Clear the memoized data when reset is called
+      return []; // Clear the memoized data when reset is called
     }
     return ViewStatusData;
   }, [ViewStatusData, resetFlag]);
@@ -106,9 +124,8 @@ const LoanSummary: FC<LoanSummaryScreenProps> = ({ navigation, route }) => {
   );
 
   useEffect(() => {
-    console.log("GetCKYCStatusData", GetCKYCStatusData);
-
-  }, [GetCKYCStatusData])
+    console.log('GetCKYCStatusData', GetCKYCStatusData);
+  }, [GetCKYCStatusData]);
 
   useEffect(() => {
     if (guarantorId && applicantTypes.length < 2) {
@@ -139,8 +156,19 @@ const LoanSummary: FC<LoanSummaryScreenProps> = ({ navigation, route }) => {
           );
       }
 
-      memoizedViewStatusData == undefined ?null: SetGuarantor( memoizedViewStatusData?.isGuarantor && memoizedViewStatusData?.isGuarantor)
-      memoizedViewStatusData == undefined ?null: setMainApplicantStatus( memoizedViewStatusData?.mainApplicant &&memoizedViewStatusData?.mainApplicant[0] || {});
+      memoizedViewStatusData == undefined
+        ? null
+        : SetGuarantor(
+            memoizedViewStatusData?.isGuarantor &&
+              memoizedViewStatusData?.isGuarantor,
+          );
+      memoizedViewStatusData == undefined
+        ? null
+        : setMainApplicantStatus(
+            (memoizedViewStatusData?.mainApplicant &&
+              memoizedViewStatusData?.mainApplicant[0]) ||
+              {},
+          );
       // setIsLoading(false)
     }
   }, [memoizedViewStatusData]);
@@ -200,26 +228,26 @@ const LoanSummary: FC<LoanSummaryScreenProps> = ({ navigation, route }) => {
           ? mainApplicantStatus.bre1Status === 'Bre1_Approved'
             ? 'BRE 1 Approved'
             : mainApplicantStatus.bre1Status === 'Bre1_Rejected'
-              ? 'Loan Rejected'
-              : 'Manual Underwriting'
+            ? 'Loan Rejected'
+            : 'Manual Underwriting'
           : guarantorStatus?.bre1Status === 'Bre1_Approved'
-            ? 'BRE 1 Approved'
-            : guarantorStatus?.bre1Status === 'Bre1_Rejected'
-              ? 'Loan Rejected'
-              : 'Manual Underwriting',
+          ? 'BRE 1 Approved'
+          : guarantorStatus?.bre1Status === 'Bre1_Rejected'
+          ? 'Loan Rejected'
+          : 'Manual Underwriting',
 
       navigation:
         applicantType === 'mainApplicant'
           ? mainApplicantStatus?.bre1Status === 'Bre1_Approved'
             ? ScreenNames.BREApproved
             : mainApplicantStatus?.bre1Status === 'Bre1_Rejected'
-              ? ScreenNames.LoanRejected
-              : ScreenNames.ManualUnderwriting
+            ? ScreenNames.LoanRejected
+            : ScreenNames.ManualUnderwriting
           : guarantorStatus?.bre1Status === 'Bre1_Approved'
-            ? ScreenNames.BREApproved
-            : guarantorStatus?.bre1Status === 'Bre1_Rejected'
-              ? ScreenNames.LoanRejected
-              : ScreenNames.ManualUnderwriting,
+          ? ScreenNames.BREApproved
+          : guarantorStatus?.bre1Status === 'Bre1_Rejected'
+          ? ScreenNames.LoanRejected
+          : ScreenNames.ManualUnderwriting,
       isActive:
         applicantType === 'mainApplicant'
           ? mainApplicantStatus?.breSuccess
@@ -228,7 +256,7 @@ const LoanSummary: FC<LoanSummaryScreenProps> = ({ navigation, route }) => {
     {
       screenName: 'Product Details',
       navigation: ScreenNames.ProductDetails,
-      isActive: 
+      isActive:
         applicantType === 'mainApplicant'
           ? mainApplicantStatus?.productStatus
           : guarantorStatus?.productStatus,
@@ -244,7 +272,7 @@ const LoanSummary: FC<LoanSummaryScreenProps> = ({ navigation, route }) => {
     {
       screenName: 'Loan Details',
       navigation: ScreenNames.LoanDetails,
-      isActive: 
+      isActive:
         applicantType === 'mainApplicant'
           ? mainApplicantStatus?.loanDetailsStatus
           : guarantorStatus?.loanDetailsStatus,
@@ -260,7 +288,7 @@ const LoanSummary: FC<LoanSummaryScreenProps> = ({ navigation, route }) => {
     {
       screenName: 'Loan Offer',
       navigation: ScreenNames.LoanOffer,
-      isActive: 
+      isActive:
         applicantType === 'mainApplicant'
           ? mainApplicantStatus?.loanOfferStatus
           : guarantorStatus?.loanOfferStatus,
@@ -284,7 +312,7 @@ const LoanSummary: FC<LoanSummaryScreenProps> = ({ navigation, route }) => {
     {
       screenName: 'Sanction Letter',
       navigation: ScreenNames.SanctionLetter,
-      isActive: 
+      isActive:
         applicantType === 'mainApplicant'
           ? mainApplicantStatus?.sanctionLetterStatus
           : guarantorStatus?.sanctionLetterStatus,
@@ -308,7 +336,7 @@ const LoanSummary: FC<LoanSummaryScreenProps> = ({ navigation, route }) => {
     {
       screenName: 'KFS (Key Fact Statement)',
       navigation: ScreenNames.KFS,
-      isActive: 
+      isActive:
         applicantType === 'mainApplicant'
           ? mainApplicantStatus?.kfsStatus
           : guarantorStatus?.kfsStatus,
@@ -316,7 +344,7 @@ const LoanSummary: FC<LoanSummaryScreenProps> = ({ navigation, route }) => {
     {
       screenName: 'Loan Agreement',
       navigation: ScreenNames.LoanAgreement,
-      isActive: 
+      isActive:
         applicantType === 'mainApplicant'
           ? mainApplicantStatus?.isLoanAgreement
           : guarantorStatus?.isLoanAgreement,
@@ -324,7 +352,7 @@ const LoanSummary: FC<LoanSummaryScreenProps> = ({ navigation, route }) => {
     {
       screenName: 'Pre Disbursal Documents',
       navigation: ScreenNames.PreDisbursalDocuments,
-      isActive: 
+      isActive:
         applicantType === 'mainApplicant'
           ? mainApplicantStatus?.preDisbursalDocument
           : guarantorStatus?.preDisbursalDocument,
@@ -332,7 +360,7 @@ const LoanSummary: FC<LoanSummaryScreenProps> = ({ navigation, route }) => {
     {
       screenName: 'PSD',
       navigation: ScreenNames.PSDDocument,
-      isActive: 
+      isActive:
         applicantType === 'mainApplicant'
           ? mainApplicantStatus?.isPsd
           : guarantorStatus?.isPsd,
@@ -355,74 +383,57 @@ const LoanSummary: FC<LoanSummaryScreenProps> = ({ navigation, route }) => {
     },
   ];
 
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     const getMasterLogin = async () => {
-  //       const value = await AsyncStorage.getItem('ismasterLogin');
-  //       console.log("mmmmmm&&&&&&&&&&&&&&&&mm", value);
-  //       setMasterLogin(value);
-  //     };
-
-  //     getMasterLogin();
-  //     const onBackPress = async () => {
-  //       await AsyncStorage.getItem('ismasterLogin') == 'true' ?
-  //         navigation.navigate('Dashboard')
-  //         :
-  //         navigation.navigate('LeadManagement')
-  //       return true;
-  //     };
-  //     BackHandler.addEventListener('hardwareBackPress', onBackPress);
-  //     return () =>
-  //       BackHandler.removeEventListener('hardwareBackPress', onBackPress);
-  //   }, []),
-  // );
-
   useFocusEffect(
-  React.useCallback(() => {
-    const getMasterLogin = async () => {
-      const value = await AsyncStorage.getItem('ismasterLogin');
-      console.log("Master Login Status:", value);
-      setMasterLogin(value);
-    };
+    React.useCallback(() => {
+      const getMasterLogin = async () => {
+        // const value = await AsyncStorage.getItem('ismasterLogin');
+        const secureData = await getSecureData();
+        const value = secureData?.ismasterLogin;
+        console.log('mmmmmm&&&&&&&&&&&&&&&&mm', value);
+        setMasterLogin(value);
+      };
+      getMasterLogin();
 
-    getMasterLogin();
-
-    const onBackPress = () => {
-      if (masterLogin === 'true') {
-        navigation.navigate('Dashboard');
-      } else {
-        navigation.navigate('LeadManagement');
-      }
-      return true;
-    };
-
-    if (Platform.OS === 'android') {
-      const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
-      return () => backHandler.remove(); // ✅ Cleanup
-    } else {
-      console.log("mjjjjj");
-      
-      const onBeforeRemove = (e: any) => {
-        if (e.data.action.type === 'GO_BACK') {
-          e.preventDefault();
-          if (masterLogin === 'true') {
-            console.log("iiiiiii");
-
-            navigation.navigate('Dashboard');
-          } else {
-            console.log("eeeeee");
-            navigation.dispatch(e.data.action); 
-            // navigation.navigate('LeadManagement');
-          }
+      const onBackPress = async () => {
+        const secureData = await getSecureData();
+        const ismasterLogin = secureData?.ismasterLogin;
+        if (ismasterLogin === 'true') {
+          navigation.navigate('Dashboard');
+        } else {
+          navigation.navigate('LeadManagement');
         }
+        return true;
       };
 
-      navigation.addListener('beforeRemove', onBeforeRemove);
-      return () => navigation.removeListener('beforeRemove', onBeforeRemove);
-    }
-  }, [masterLogin, navigation])
-);
+      if (Platform.OS === 'android') {
+        const backHandler = BackHandler.addEventListener(
+          'hardwareBackPress',
+          onBackPress,
+        );
+        return () => backHandler.remove(); // ✅ Cleanup
+      } else {
+        console.log('mjjjjj');
 
+        const onBeforeRemove = (e: any) => {
+          if (e.data.action.type === 'GO_BACK') {
+            e.preventDefault();
+            if (masterLogin === 'true') {
+              console.log('iiiiiii');
+
+              navigation.navigate('Dashboard');
+            } else {
+              console.log('eeeeee');
+              navigation.dispatch(e.data.action);
+              // navigation.navigate('LeadManagement');
+            }
+          }
+        };
+
+        navigation.addListener('beforeRemove', onBeforeRemove);
+        return () => navigation.removeListener('beforeRemove', onBeforeRemove);
+      }
+    }, []),
+  );
 
   useEffect(() => {
     if (memoizedCKYCStatusData) {
@@ -438,7 +449,7 @@ const LoanSummary: FC<LoanSummaryScreenProps> = ({ navigation, route }) => {
 
   useFocusEffect(
     useCallback(() => {
-      setIsLoading(true)
+      setIsLoading(true);
       setResetFlag(true);
       ViewStatus.reset();
       GetCKYCStatus.reset();
@@ -456,32 +467,42 @@ const LoanSummary: FC<LoanSummaryScreenProps> = ({ navigation, route }) => {
 
   useEffect(() => {
     if (memoizedViewStatusData) {
-      
-      console.log("memoizedViewStatusData", mainApplicantStatus, JSON.stringify(memoizedViewStatusData, null, 4));
+      console.log(
+        'memoizedViewStatusData',
+        mainApplicantStatus,
+        JSON.stringify(memoizedViewStatusData, null, 4),
+      );
 
       SaveViewStatus({
         isFreeze:
-          (applicantType === 'guarantor'
+          applicantType === 'guarantor'
             ? memoizedViewStatusData?.isGuarantor[0]?.isFreeze
-            : memoizedViewStatusData?.mainApplicant[0]?.isFreeze),
+            : memoizedViewStatusData?.mainApplicant[0]?.isFreeze,
         isSubmitToCreditFreeze: memoizedViewStatusData?.isSubmitToCreditFreeze,
-        isSubmitToDisbursement: memoizedViewStatusData?.isSubmitToDisbursementFreeze,
+        isSubmitToDisbursement:
+          memoizedViewStatusData?.isSubmitToDisbursementFreeze,
         isDisbursementFreeze: memoizedViewStatusData?.isDisbursementFreeze,
         mainApplicant: memoizedViewStatusData?.mainApplicant,
         guarantor: memoizedViewStatusData?.guarantor,
         isSalesReject: memoizedViewStatusData?.isSalesReject,
-        isSalesRejectButtonVisible: memoizedViewStatusData?.isSalesRejectButtonVisible,
+        isSalesRejectButtonVisible:
+          memoizedViewStatusData?.isSalesRejectButtonVisible,
         isReEdit: memoizedViewStatusData?.isReEdit,
         isReEditButtonVisible: memoizedViewStatusData?.isReEditButtonVisible,
         isReEditbankDetails: memoizedViewStatusData?.isReEditbankDetails,
-        isReEditRepayment: memoizedViewStatusData?.isReEditRepayment
-
-      },);
-      setTimeout(() => {setIsLoading(false), console.log("kkkkkkk");
+        isReEditRepayment: memoizedViewStatusData?.isReEditRepayment,
+      });
+      setTimeout(() => {
+        setIsLoading(false), console.log('kkkkkkk');
       }, 5000);
       // setIsLoading(false)
     }
-  }, [memoizedViewStatusData, applicantType, guarantorStatus, mainApplicantStatus]);
+  }, [
+    memoizedViewStatusData,
+    applicantType,
+    guarantorStatus,
+    mainApplicantStatus,
+  ]);
 
   const filteredGuarantorSections = [
     ...qdeSections.slice(
@@ -490,15 +511,23 @@ const LoanSummary: FC<LoanSummaryScreenProps> = ({ navigation, route }) => {
     ),
   ];
 
-// console.log("applicantTypbhhhhhhe",applicantType, isNextEnable);
+  // console.log("applicantTypbhhhhhhe",applicantType, isNextEnable);
 
   return (
-    <WaveBackground isMasterApp={JSON.parse(masterLogin)} loading={[
-      ViewStatusIsLoading, GetCKYCStatusDataIsLoading, GetSanctionLetterDetailsIsLoading,
-      isLoading]} title={'Loan Summary'}>
-
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} keyboardDismissMode="on-drag" >
-      <SessionExpiredPopup/>
+    <WaveBackground
+      isMasterApp={JSON.parse(masterLogin)}
+      loading={[
+        ViewStatusIsLoading,
+        GetCKYCStatusDataIsLoading,
+        GetSanctionLetterDetailsIsLoading,
+        isLoading,
+      ]}
+      title={'Loan Summary'}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        keyboardDismissMode="on-drag">
+        <SessionExpiredPopup />
 
         <View style={[styles.container]}>
           {applicantTypes.map((item: applicantTypeObect, index: number) => (
@@ -523,119 +552,158 @@ const LoanSummary: FC<LoanSummaryScreenProps> = ({ navigation, route }) => {
         </View>
       </ScrollView>
 
-      {applicantType == 'guarantor' && guarantorStatus?.consentStatus == "consent_pending" && <View style={[styles.leadContainer]}>
-        <View style={styles.cardContainer}>
+      {applicantType == 'guarantor' &&
+        guarantorStatus?.consentStatus == 'consent_pending' && (
+          <View style={[styles.leadContainer]}>
+            <View style={styles.cardContainer}>
+              <Text style={styles.activeCardHeaderStyle}>
+                {'Lead Registration'}
+              </Text>
+              <Button
+                text={'Continue'}
+                active
+                position
+                marginTop={25}
+                // marginVertical={30}
+                halfSize
+                onPress={() => {
+                  SetMainApplicant(false);
+                  SaveGuarantorId(guarantorId),
+                    navigation.navigate('LeadRegistration');
+                }}
+              />
+            </View>
+          </View>
+        )}
 
-          <Text style={styles.activeCardHeaderStyle}>{"Lead Registration"}</Text>
-          <Button
-            text={'Continue'}
-            active
-            position
-            marginTop={25}
-            // marginVertical={30}
-            halfSize
-            onPress={() => {
-              SetMainApplicant(false);
-              SaveGuarantorId(guarantorId),
-                navigation.navigate('LeadRegistration')
-            }}
-          />
-
-        </View>
-      </View>}
-
-      {(applicantType == 'guarantor' && guarantorStatus?.consentStatus == "consent_pending") ? null : 
-      <SummaryCard
-        section={
-          applicantType == 'guarantor' ?
-            !guarantorStatus?.isGuarantorMandatory ?
-              GetCKYCStatusData?.isPanAvailable ?
-                filteredGuarantorSections.filter(el => el.screenName !== 'OVD Verification' && el.screenName !== 'Product Details')
-                : filteredGuarantorSections.filter(el => el.screenName !== 'PAN Verification' && el.screenName !== 'Product Details')
-              :
-              GetCKYCStatusData?.isPanAvailable ?
-                filteredGuarantorSections.filter(el => (memoizedViewStatusData?.productType == 'NIP' || memoizedViewStatusData?.productType == 'Asset') ? el.screenName !== 'OVD Verification' && el.screenName !== 'Loan Details' && el.screenName !== 'Delarship Details' : el.screenName !== 'OVD Verification')
-                : filteredGuarantorSections.filter(el => (memoizedViewStatusData?.productType == 'NIP' || memoizedViewStatusData?.productType == 'Asset') ? el.screenName !== 'PAN Verification' && el.screenName !== 'Loan Details' && el.screenName !== 'Delarship Details' : el.screenName !== 'PAN Verification')
-
-            // filteredGuarantorSections.filter(el => el.screenName !== 'PAN Verification')
-            : GetCKYCStatusData?.isPanAvailable ?
-              qdeSections.filter(el => el.screenName !== 'OVD Verification')
+      {applicantType == 'guarantor' &&
+      guarantorStatus?.consentStatus == 'consent_pending' ? null : (
+        <SummaryCard
+          section={
+            applicantType == 'guarantor'
+              ? !guarantorStatus?.isGuarantorMandatory
+                ? GetCKYCStatusData?.isPanAvailable
+                  ? filteredGuarantorSections.filter(
+                      el =>
+                        el.screenName !== 'OVD Verification' &&
+                        el.screenName !== 'Product Details',
+                    )
+                  : filteredGuarantorSections.filter(
+                      el =>
+                        el.screenName !== 'PAN Verification' &&
+                        el.screenName !== 'Product Details',
+                    )
+                : GetCKYCStatusData?.isPanAvailable
+                ? filteredGuarantorSections.filter(el =>
+                    memoizedViewStatusData?.productType == 'NIP' ||
+                    memoizedViewStatusData?.productType == 'Asset'
+                      ? el.screenName !== 'OVD Verification' &&
+                        el.screenName !== 'Loan Details' &&
+                        el.screenName !== 'Delarship Details'
+                      : el.screenName !== 'OVD Verification',
+                  )
+                : filteredGuarantorSections.filter(el =>
+                    memoizedViewStatusData?.productType == 'NIP' ||
+                    memoizedViewStatusData?.productType == 'Asset'
+                      ? el.screenName !== 'PAN Verification' &&
+                        el.screenName !== 'Loan Details' &&
+                        el.screenName !== 'Delarship Details'
+                      : el.screenName !== 'PAN Verification',
+                  )
+              : // filteredGuarantorSections.filter(el => el.screenName !== 'PAN Verification')
+              GetCKYCStatusData?.isPanAvailable
+              ? qdeSections.filter(el => el.screenName !== 'OVD Verification')
               : qdeSections.filter(el => el.screenName !== 'PAN Verification')
-        }
-        CKYCData={GetCKYCStatusData || null}
-        title={'Quick Data Entry'}
-        criffReportPath={
-          (applicantType === 'guarantor'
-            ? guarantorStatus?.criffReportPath
-            : mainApplicantStatus?.criffReportPath) || ''
-        }
-        navigation={navigation}
-        docNumber={
-          (applicantType === 'guarantor'
-            ? guarantorStatus?.documentNumber
-            : mainApplicantStatus?.documentNumber) || ''
-        }
-        appId={applicantType === 'guarantor' ? guarantorId : applicantId || ''}
-        applicantType={applicantType || ''}
-        applicantName={
-          (applicantType === 'guarantor'
-            ? guarantorStatus?.applicantName
-            : mainApplicantStatus?.applicantName) || ''
-        }
-        bureauScore={
-          (applicantType === 'guarantor'
-            ? guarantorStatus?.bureauScore
-            : mainApplicantStatus?.bureauScore) || ''
-        }
-        isNextEnableBureau={
-          (applicantType === 'guarantor'
-            ? guarantorStatus?.isNextEnableBureau
-            : mainApplicantStatus?.isNextEnableBureau) || false
-        }
-        isPopUpVisibleBureau={
-          (applicantType === 'guarantor'
-            ? guarantorStatus?.isPopUpVisibleBureau
-            : mainApplicantStatus?.isPopUpVisibleBureau) || false
-        }
-        popUpMessageBureau={
-          (applicantType === 'guarantor'
-            ? guarantorStatus?.popUpMessageBureau
-            : mainApplicantStatus?.popUpMessageBureau) || ''
-        }
-        isGuarantorMandatory={
-          (applicantType === 'guarantor'
-            ? guarantorStatus?.isGuarantorMandatory
-            : mainApplicantStatus?.isGuarantorMandatory) || false
-        }
-        key={applicantType}
-        continueDisable={
-          (applicantType === 'guarantor' ?
-            guarantorStatus?.productStatus :
-            mainApplicantStatus?.postDisbursalDocument) || false
-        }
-        loanOffer={applicantType === 'mainApplicant' ? isNextEnable : true}
-        creditNextEnable={memoizedViewStatusData?.isSubmitToCreditFreeze}
-        empStatus={mainApplicantStatus?.empStatus}
-        SactionNextEnable={
-          memoizedViewStatusData?.isCreditApproved
-        }
-        isSubmitToDisbursementFreeze={
-          memoizedViewStatusData?.isSubmitToDisbursementFreeze
-        }
-        isSalesReject={memoizedViewStatusData?.isSalesReject || false}
-        isEditButtonVisible={applicantType === 'mainApplicant' ? (memoizedViewStatusData?.isReEditButtonVisible || false) : false}
-        isReEdit={memoizedViewStatusData?.isReEdit || false}
-        isRejectButtonVisible={applicantType === 'mainApplicant' ? (memoizedViewStatusData?.isSalesRejectButtonVisible || false) : false}
-        loanPopup={(applicantType === 'guarantor'
-          ? guarantorStatus?.loanPopup
-          : mainApplicantStatus?.loanPopup) || false}
-        rejectMessage={(applicantType === 'guarantor'
-          ? guarantorStatus?.rejectMessage
-          : mainApplicantStatus?.rejectMessage) || ''}
-        isReAppeal={(applicantType === 'guarantor'
-          ? guarantorStatus?.isReAppealButtonVisible
-          : mainApplicantStatus?.isReAppealButtonVisible)}
-      />}
+          }
+          CKYCData={GetCKYCStatusData || null}
+          title={'Quick Data Entry'}
+          criffReportPath={
+            (applicantType === 'guarantor'
+              ? guarantorStatus?.criffReportPath
+              : mainApplicantStatus?.criffReportPath) || ''
+          }
+          navigation={navigation}
+          docNumber={
+            (applicantType === 'guarantor'
+              ? guarantorStatus?.documentNumber
+              : mainApplicantStatus?.documentNumber) || ''
+          }
+          appId={
+            applicantType === 'guarantor' ? guarantorId : applicantId || ''
+          }
+          applicantType={applicantType || ''}
+          applicantName={
+            (applicantType === 'guarantor'
+              ? guarantorStatus?.applicantName
+              : mainApplicantStatus?.applicantName) || ''
+          }
+          bureauScore={
+            (applicantType === 'guarantor'
+              ? guarantorStatus?.bureauScore
+              : mainApplicantStatus?.bureauScore) || ''
+          }
+          isNextEnableBureau={
+            (applicantType === 'guarantor'
+              ? guarantorStatus?.isNextEnableBureau
+              : mainApplicantStatus?.isNextEnableBureau) || false
+          }
+          isPopUpVisibleBureau={
+            (applicantType === 'guarantor'
+              ? guarantorStatus?.isPopUpVisibleBureau
+              : mainApplicantStatus?.isPopUpVisibleBureau) || false
+          }
+          popUpMessageBureau={
+            (applicantType === 'guarantor'
+              ? guarantorStatus?.popUpMessageBureau
+              : mainApplicantStatus?.popUpMessageBureau) || ''
+          }
+          isGuarantorMandatory={
+            (applicantType === 'guarantor'
+              ? guarantorStatus?.isGuarantorMandatory
+              : mainApplicantStatus?.isGuarantorMandatory) || false
+          }
+          key={applicantType}
+          continueDisable={
+            (applicantType === 'guarantor'
+              ? guarantorStatus?.productStatus
+              : mainApplicantStatus?.postDisbursalDocument) || false
+          }
+          loanOffer={applicantType === 'mainApplicant' ? isNextEnable : true}
+          creditNextEnable={memoizedViewStatusData?.isSubmitToCreditFreeze}
+          empStatus={mainApplicantStatus?.empStatus}
+          SactionNextEnable={memoizedViewStatusData?.isCreditApproved}
+          isSubmitToDisbursementFreeze={
+            memoizedViewStatusData?.isSubmitToDisbursementFreeze
+          }
+          isSalesReject={memoizedViewStatusData?.isSalesReject || false}
+          isEditButtonVisible={
+            applicantType === 'mainApplicant'
+              ? memoizedViewStatusData?.isReEditButtonVisible || false
+              : false
+          }
+          isReEdit={memoizedViewStatusData?.isReEdit || false}
+          isRejectButtonVisible={
+            applicantType === 'mainApplicant'
+              ? memoizedViewStatusData?.isSalesRejectButtonVisible || false
+              : false
+          }
+          loanPopup={
+            (applicantType === 'guarantor'
+              ? guarantorStatus?.loanPopup
+              : mainApplicantStatus?.loanPopup) || false
+          }
+          rejectMessage={
+            (applicantType === 'guarantor'
+              ? guarantorStatus?.rejectMessage
+              : mainApplicantStatus?.rejectMessage) || ''
+          }
+          isReAppeal={
+            applicantType === 'guarantor'
+              ? guarantorStatus?.isReAppealButtonVisible
+              : mainApplicantStatus?.isReAppealButtonVisible
+          }
+        />
+      )}
     </WaveBackground>
   );
 };

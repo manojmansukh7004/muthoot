@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import { BackHandler, View, Text } from 'react-native';
+import { BackHandler, View, Text, Platform } from 'react-native';
 import { RouteProp, useFocusEffect } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import WaveBackground from 'components/WaveBackground';
@@ -143,23 +143,34 @@ const NachReactivation: FC<NachReactivationScreenProps> = ({ navigation, route }
 
 
 
+    
     useFocusEffect(
         useCallback(() => {
-            const resetDataAndSetLogin = async () => {
-                // await AsyncStorage.setItem('ismasterLogin', 'false');
-                // await Keychain.setGenericPassword('ismasterLogin', 'false');
-                await updateIsNachReactivation('false')
-
-            };
-
-            resetDataAndSetLogin();
-            BackHandler.addEventListener('hardwareBackPress', handleBackPress);
-            return () => {
-                BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
-            };
+          const resetDataAndSetLogin = async () => {
+            await updateIsNachReactivation('false');
+          };
+      
+          resetDataAndSetLogin();
+      
+          const onBackPress = () => {
+            handleBackPress();
+            return true; // Prevent default back behavior on Android
+          };
+      
+          if (Platform.OS === 'android') {
+            const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+            return () => backHandler.remove(); // ✅ Proper cleanup for Android
+          } else {
+            // Handle iOS back gesture using navigation listener
+            const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+              e.preventDefault(); // Prevent default back navigation
+              handleBackPress(); // Handle manually
+            });
+      
+            return () => unsubscribe(); // ✅ Proper cleanup for iOS
+          }
         }, [handleBackPress])
-    );
-
+    )
 
 
     return (

@@ -1,7 +1,7 @@
-import React, { FC, useEffect, useState, useRef } from 'react';
-import { TouchableOpacity, View, Text } from 'react-native';
-import { RouteProp, useFocusEffect } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import React, {FC, useEffect, useState, useRef} from 'react';
+import {TouchableOpacity, View, Text} from 'react-native';
+import {RouteProp, useFocusEffect} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 import * as Animatable from 'react-native-animatable';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
@@ -12,33 +12,32 @@ import {
   useGetRefrence,
   useGetCustomerType,
   useGetLead,
-
-  useGetPreApprovedOffer
+  useGetPreApprovedOffer,
 } from 'api/ReactQuery/TwoWheeler/Lead';
 import {
   GetApplicantDetailsByAadharRequest,
   SaveorUpdateLeadRequest,
-  GetPreApprovedOfferRequest
+  GetPreApprovedOfferRequest,
 } from 'api/ReactQuery/TwoWheeler/Lead/types';
 import WaveBackground from 'components/WaveBackground';
 import LabeledTextInput from 'components/LabeledTextInput';
 import LabeledRadioButtonGroup from 'components/LabeledRadioButtonGroup';
 import Button from 'components/Button';
-import { DropdownObject, ErrorObject } from 'config/Types';
+import {DropdownObject, ErrorObject} from 'config/Types';
 import Colors from 'config/Colors';
-import { useApplicantDetails } from 'context/useApplicantDetails';
+import {useApplicantDetails} from 'context/useApplicantDetails';
 import Icon from 'components/Icon';
 import {
   RemoveAadharPrefix,
   RemovePrefixes,
 } from 'config/Functions/ConvertToPrefix';
 import useActive from 'hooks/useActive';
-import { RootStackParamList } from 'navigation/HomeStack/TwoWheelerStack';
+import {RootStackParamList} from 'navigation/HomeStack/TwoWheelerStack';
 import RadioButtonGroup from 'components/RadioButtonGroup';
 import styles from './styles';
 import setAllErrorsToFalse from 'config/Functions/SetAllErrorsToFalse';
-import { useEmployeeDetails } from 'context/useEmployeeDetails';
-import { useGetConstitution } from 'api/ReactQuery/TwoWheeler/Master';
+import {useEmployeeDetails} from 'context/useEmployeeDetails';
+import {useGetConstitution} from 'api/ReactQuery/TwoWheeler/Master';
 import TextInput from 'components/TextInput';
 import LabelDropdown from 'components/LabelDropdown';
 import LabeledDropdown from 'components/LabeledDropdown';
@@ -62,10 +61,11 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
   navigation,
   route,
 }) => {
-  const { applicantId, guarantorId, isMainApplicant, SaveApplicantDetails } = useApplicantDetails();
+  const {applicantId, guarantorId, isMainApplicant, SaveApplicantDetails} =
+    useApplicantDetails();
   // console.log("isMainApplicant", isMainApplicant, guarantorId);
 
-  const { employeeId } = useEmployeeDetails();
+  const {employeeId} = useEmployeeDetails();
   const [isError, setIsError] = useState<ErrorObject[]>([]);
   const [selectedGender, setSelectedGender] = useState<string>('');
   const [firstName, setFirstName] = useState<string>('');
@@ -91,7 +91,8 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
   const [maritalStatus, setMaritalStatus] = useState<string>('');
   const [selectedBranch, setSelectedBranch] = useState<string>('');
   const [selectedExistingType, setSelectedExistingType] = useState<string>('');
-  const [relationToMainApplicant, setRelationToMainApplicant] = useState<string>('');
+  const [relationToMainApplicant, setRelationToMainApplicant] =
+    useState<string>('');
   const [incomeStatus, setIncomeStatus] = useState<string>('Earning');
   const [fatherName, setFatherName] = useState<string>('');
   const [emailId, setEmailId] = useState<string>('');
@@ -119,7 +120,10 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
   const [isOpenBranch, setIsOpenBranch] = useState<boolean>(false);
   const [isOpenCustomerType, setIsOpenCustomerType] = useState<boolean>(false);
 
-  const getAge = (birthDate: string) => Math.floor((new Date().getTime() - new Date(birthDate).getTime()) / 3.15576e+10);
+  const getAge = (birthDate: string) =>
+    Math.floor(
+      (new Date().getTime() - new Date(birthDate).getTime()) / 3.15576e10,
+    );
 
   function getDecimalAge(birthDate: string): string {
     const birth = new Date(birthDate);
@@ -139,24 +143,28 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
       months += 12;
     }
 
-    const decimalMonths = months + days / new Date(today.getFullYear(), today.getMonth(), 0).getDate();
+    const decimalMonths =
+      months +
+      days / new Date(today.getFullYear(), today.getMonth(), 0).getDate();
     const decimalAge = (years + decimalMonths / 12).toFixed(1);
 
     return decimalAge;
   }
 
-  const [GetLead, { data: GetLeadData, isLoading: GetLeadIsLoading }] =
-    useGetLead(`${applicantId}&applicantType=mainApplicant`,);
+  const [GetLead, {data: GetLeadData, isLoading: GetLeadIsLoading}] =
+    useGetLead(`${applicantId}&applicantType=mainApplicant`);
 
   const [
     GetLeadForGuarantor,
-    { data: GetLeadDataGuarantor, isLoading: GetLeadIsGuarantorLoading },
-  ] = useGetLead(`${guarantorId}&applicantType=guarantor`,
-  );
+    {data: GetLeadDataGuarantor, isLoading: GetLeadIsGuarantorLoading},
+  ] = useGetLead(`${guarantorId}&applicantType=guarantor`);
 
   useEffect(() => {
     if (GetLeadDataGuarantor) {
-      console.log("GetLeadDataGuarantorrrrrr", JSON.stringify(GetLeadDataGuarantor, null, 4));
+      console.log(
+        'GetLeadDataGuarantorrrrrr',
+        JSON.stringify(GetLeadDataGuarantor, null, 4),
+      );
       setFirstName(GetLeadDataGuarantor.firstName || '');
       setMiddleName(GetLeadDataGuarantor.middleName || '');
       setLastName(GetLeadDataGuarantor.lastName || '');
@@ -187,12 +195,10 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
         GetLeadDataGuarantor.isEarning === 'Yes' ? 'Earning' : 'Not Earning',
       );
       setSelectedOffer(GetLeadDataGuarantor?.selectedOffer);
-      setIsPreOffer(
-        GetLeadDataGuarantor.isSulbThird ? 'Yes' : 'No'
-      );
+      setIsPreOffer(GetLeadDataGuarantor.isSulbThird ? 'Yes' : 'No');
       setReferredBy(GetLeadDataGuarantor.referredBy);
       setReferredEmpPhoneNo(GetLeadDataGuarantor?.referredEmployeePhonenumber);
-      setReferredEmpCode( GetLeadDataGuarantor.referredEmployeeCode );
+      setReferredEmpCode(GetLeadDataGuarantor.referredEmployeeCode);
       // GetLeadDataGuarantor.isMale === true && setSelectedGender('Male');
       // setTenure(GetLeadDataGuarantor?.tenure?.toString())
     }
@@ -200,42 +206,40 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
 
   useEffect(() => {
     if (GetLeadData && !isMainApplicant) {
-
       GetLeadData.isMale === true && setSelectedGender('Male');
-      setTenure(GetLeadData?.tenure?.toString())
-
+      setTenure(GetLeadData?.tenure?.toString());
     }
   }, [GetLeadData]);
 
   useEffect(() => {
     if (jobStability || jobStabilityYear) {
-
-      var datearray = dateofbirth.split("-");
+      var datearray = dateofbirth.split('-');
       var newdate = datearray[2] + '-' + datearray[1] + '-' + datearray[0];
-      var age = Number(getAge(newdate)) - Number(15)
-      var year: Number = Math.ceil(Number(jobStability) / 12) + Math.ceil(Number(jobStabilityYear))
+      var age = Number(getAge(newdate)) - Number(15);
+      var year: Number =
+        Math.ceil(Number(jobStability) / 12) +
+        Math.ceil(Number(jobStabilityYear));
 
-      console.log("yyyyyyyyyy", year);
+      console.log('yyyyyyyyyy', year);
 
       Number(year) > Number(age) ? setJobStability('') : null;
       Number(year) > Number(age) ? setJobStabilityYear('') : null;
       Number(year) <= Number(0) ? setJobStability('') : null;
 
-      jobStability && Number(year) <= Number(0) ?
-        useShowFlashMessage(
-          'warning',
-          `User cannot enter a duration of job stability less than 0 Month`,
-        ) : null
-      Number(year) > Number(age) ?
-        useShowFlashMessage(
-          'warning',
-          `User can't enter higher job stability duration greater than age`,
-        ) : null
+      jobStability && Number(year) <= Number(0)
+        ? useShowFlashMessage(
+            'warning',
+            `User cannot enter a duration of job stability less than 0 Month`,
+          )
+        : null;
+      Number(year) > Number(age)
+        ? useShowFlashMessage(
+            'warning',
+            `User can't enter higher job stability duration greater than age`,
+          )
+        : null;
     }
   }, [jobStability, jobStabilityYear]);
-
-
-
 
   const ResetValuesWithoutAadharNumber = () => {
     setFirstName('');
@@ -256,7 +260,7 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
     setFatherName('');
     setMotherName('');
     setJobStability('');
-    setJobStabilityYear('')
+    setJobStabilityYear('');
     setAlternateContact('');
     setSelectedExistingType('');
     setSelectedBranch('');
@@ -278,16 +282,17 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
   }, [applicantId]);
 
   const GetApplicantDetailsByAadharGuarantorRequest: GetApplicantDetailsByAadharRequest =
-  {
-    aadharNo: aadharNumber,
-    appId: applicantId,
-    applicantType: !isMainApplicant ? 'guarantor' : 'mainApplicant',
-  };
+    {
+      aadharNo: aadharNumber,
+      appId: applicantId,
+      applicantType: !isMainApplicant ? 'guarantor' : 'mainApplicant',
+    };
 
-  const GetApplicantDetailsByAadharRequest: GetApplicantDetailsByAadharRequest = {
-    aadharNo: aadharNumber,
-    applicantType: !isMainApplicant ? 'guarantor' : 'mainApplicant',
-  };
+  const GetApplicantDetailsByAadharRequest: GetApplicantDetailsByAadharRequest =
+    {
+      aadharNo: aadharNumber,
+      applicantType: !isMainApplicant ? 'guarantor' : 'mainApplicant',
+    };
 
   const GetPreApprovedOfferRequest: GetPreApprovedOfferRequest = {
     aadharNo: RemovePrefixes(aadharNumber),
@@ -297,19 +302,24 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
     applicantType: !isMainApplicant ? 'guarantor' : 'mainApplicant',
   };
 
-  const [GetCustomerProfile, { data: GetCustomerProfileData }] =
+  const [GetCustomerProfile, {data: GetCustomerProfileData}] =
     useGetCustomerProfile(`/${customerType}`);
 
-  const [GetRefrence, { data: GetRefrenceData }] =
-    useGetRefrence(`?type=${'referredBy'}`);
+  const [GetRefrence, {data: GetRefrenceData}] = useGetRefrence(
+    `?type=${'referredBy'}`,
+  );
 
-  const [getPreApproveOffer, { data: getPreApproveOfferData, isLoading: getPreApproveOfferIsLoading }] =
-    useGetPreApprovedOffer(GetPreApprovedOfferRequest);
+  const [
+    getPreApproveOffer,
+    {data: getPreApproveOfferData, isLoading: getPreApproveOfferIsLoading},
+  ] = useGetPreApprovedOffer(GetPreApprovedOfferRequest);
 
-  const [GetConstitution, { data: GetConstitutionData }] = useGetConstitution(`/${customerType}`);
+  const [GetConstitution, {data: GetConstitutionData}] = useGetConstitution(
+    `/${customerType}`,
+  );
 
-  const [GetBranches, { data: GetBranchesData }] = useGetBranches(employeeId);
-  const [GetCustomerType, { data: GetCustomerTypeData }] = useGetCustomerType();
+  const [GetBranches, {data: GetBranchesData}] = useGetBranches(employeeId);
+  const [GetCustomerType, {data: GetCustomerTypeData}] = useGetCustomerType();
 
   const [
     GetApplicantDetailsByAadhar,
@@ -326,31 +336,30 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
   useEffect(() => {
     GetBranches.mutateAsync();
     GetCustomerType.mutateAsync();
-    GetRefrence.mutateAsync()
+    GetRefrence.mutateAsync();
   }, []);
 
   useEffect(() => {
     if (getPreApproveOfferData) {
-      console.log("getPreApproveOfferData", getPreApproveOfferData);
-      setIsNextEnable(true)
-      getPreApproveOfferData?.isSulbThird ? setIsPreOffer('Yes') : setIsPreOffer('No')
+      console.log('getPreApproveOfferData', getPreApproveOfferData);
+      setIsNextEnable(true);
+      getPreApproveOfferData?.isSulbThird
+        ? setIsPreOffer('Yes')
+        : setIsPreOffer('No');
     }
-
-  }, [getPreApproveOfferData])
+  }, [getPreApproveOfferData]);
 
   useEffect(() => {
     if (constitutionType) {
       GetCustomerProfile.mutateAsync();
     }
-
-  }, [constitutionType])
+  }, [constitutionType]);
 
   useEffect(() => {
     if (customerType) {
       GetConstitution.mutateAsync();
     }
-
-  }, [customerType])
+  }, [customerType]);
 
   useEffect(() => {
     if (aadharNumber.length === 12) {
@@ -371,14 +380,23 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
         GetLeadDataGuarantor?.isMale !== true ||
         !isMainApplicant)
     ) {
-      console.log("GetApplicantDetailsByAadharData", GetApplicantDetailsByAadharData);
+      console.log(
+        'GetApplicantDetailsByAadharData',
+        GetApplicantDetailsByAadharData,
+      );
 
-      setAllErrorsToFalse({ setIsError: setIsError, errorArray: isError });
+      setAllErrorsToFalse({setIsError: setIsError, errorArray: isError});
       setFirstName(GetApplicantDetailsByAadharData.firstName || '');
       setMiddleName(GetApplicantDetailsByAadharData.middleName || '');
       setLastName(GetApplicantDetailsByAadharData.lastName || '');
-      setMobileNumber(GetApplicantDetailsByAadharData.mobileNumber?.toString() || '');
-      setSelectedGender(GetLeadDataGuarantor?.isMale === true ? 'Male' : GetApplicantDetailsByAadharData.gender || '');
+      setMobileNumber(
+        GetApplicantDetailsByAadharData.mobileNumber?.toString() || '',
+      );
+      setSelectedGender(
+        GetLeadDataGuarantor?.isMale === true
+          ? 'Male'
+          : GetApplicantDetailsByAadharData.gender || '',
+      );
       // (isMainApplicant && setTempDateOfBirth(GetApplicantDetailsByAadharData.dob || ''));
       // (isMainApplicant && setDateofBirth(GetApplicantDetailsByAadharData.dob || ''));
       setCustomerProfile(GetApplicantDetailsByAadharData.customerProfile || '');
@@ -408,7 +426,9 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
       setFatherName(GetApplicantDetailsByAadharData.fatherName || '');
       setMotherName(GetApplicantDetailsByAadharData.motherName || '');
       setJobStability(GetApplicantDetailsByAadharData.jobStability || '');
-      setJobStabilityYear(GetApplicantDetailsByAadharData.jobStabilityYear || '');
+      setJobStabilityYear(
+        GetApplicantDetailsByAadharData.jobStabilityYear || '',
+      );
       setIncomeStatus(
         GetApplicantDetailsByAadharData.isEarning === 'Yes'
           ? 'Earning'
@@ -427,11 +447,13 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
     firstName,
     middleName,
     lastName,
-    name: middleName ? firstName + ' ' + middleName + ' ' + lastName : firstName + ' ' + lastName,
+    name: middleName
+      ? firstName + ' ' + middleName + ' ' + lastName
+      : firstName + ' ' + lastName,
     mobileNumber: mobileNumber,
     customerProfile: customerProfileId,
     customerType: customerType,
-    //  constitutionType == "Salaried Private" ? 'Salaried' : constitutionType == "Salaried Government" ? 'Salaried' : 
+    //  constitutionType == "Salaried Private" ? 'Salaried' : constitutionType == "Salaried Government" ? 'Salaried' :
     //  constitutionType,
     jobStability,
     jobStabilityYear,
@@ -460,7 +482,7 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
     selectedOffer: selectedOffer,
     referredBy: referredBy,
     referredEmployeeCode: referredEmpCode,
-    referredEmployeePhoneNumber: referredEmpPhoneNo
+    referredEmployeePhoneNumber: referredEmpPhoneNo,
   };
 
   const SaveorUpdateLeadRequestGuarantor: SaveorUpdateLeadRequest = {
@@ -497,18 +519,18 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
     createdBy: employeeId,
     referredBy: referredBy,
     referredEmployeeCode: referredEmpCode,
-    referredEmployeePhoneNumber: referredEmpPhoneNo
+    referredEmployeePhoneNumber: referredEmpPhoneNo,
   };
 
-  const spouseNameRef = useRef<View & { fadeIn: Function; fadeOut: Function }>(
+  const spouseNameRef = useRef<View & {fadeIn: Function; fadeOut: Function}>(
     null,
   );
 
-  const PANnumberRef = useRef<View & { fadeIn: Function; fadeOut: Function }>(
+  const PANnumberRef = useRef<View & {fadeIn: Function; fadeOut: Function}>(
     null,
   );
 
-  const EmplyerNameRef = useRef<View & { fadeIn: Function; fadeOut: Function }>(
+  const EmplyerNameRef = useRef<View & {fadeIn: Function; fadeOut: Function}>(
     null,
   );
 
@@ -537,7 +559,7 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
   }, [isPAN]);
 
   useEffect(() => {
-    setSelectedOffer('')
+    setSelectedOffer('');
   }, [isPreOffer]);
 
   useEffect(() => {
@@ -554,7 +576,7 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
 
   useEffect(() => {
     if (GetLeadData && isMainApplicant) {
-      console.log("GetLeadData", JSON.stringify(GetLeadData, null, 4));
+      console.log('GetLeadData', JSON.stringify(GetLeadData, null, 4));
 
       setFirstName(GetLeadData.firstName || '');
       setMiddleName(GetLeadData.middleName || '');
@@ -580,23 +602,25 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
       setJobStability(GetLeadData.jobStability || '');
       setReferredBy(GetLeadData.referredBy);
       setReferredEmpPhoneNo(GetLeadData?.referredEmployeePhonenumber);
-      setReferredEmpCode( GetLeadData.referredEmployeeCode );
+      setReferredEmpCode(GetLeadData.referredEmployeeCode);
       setJobStabilityYear(GetLeadData.jobStabilityYear || '');
       setRelationToMainApplicant(GetLeadData.relationship || '');
       setSelectedExistingType(GetLeadData.existingCustomer || '');
       setSelectedBranch(GetLeadData.branch || '');
-      setIncomeStatus(GetLeadData.isEarning === 'Yes' ? 'Earning' : 'Not Earning');
+      setIncomeStatus(
+        GetLeadData.isEarning === 'Yes' ? 'Earning' : 'Not Earning',
+      );
       setSelectedOffer(GetLeadData?.selectedOffer);
-      setIsPreOffer( GetLeadData.isSulbThird ? 'Yes' : 'No');
-
-     
-    }
-    else if (GetLeadData && !isMainApplicant) {
-      console.log("GetLeadDataffffffffff", JSON.stringify(GetLeadData, null, 4));
+      setIsPreOffer(GetLeadData.isSulbThird ? 'Yes' : 'No');
+    } else if (GetLeadData && !isMainApplicant) {
+      console.log(
+        'GetLeadDataffffffffff',
+        JSON.stringify(GetLeadData, null, 4),
+      );
       GetLeadData?.isMale === true && setSelectedGender('Male');
     }
     // }
-  }, [GetLeadData,]);
+  }, [GetLeadData]);
 
   useEffect(() => {
     if (!isMainApplicant) {
@@ -683,39 +707,62 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
   }, [customerProfile, GetCustomerProfileData]);
 
   const ondobChange = (event: any, selectedDate: Date | undefined) => {
-    console.log("jjnnnnnnnn", isMainApplicant);
+    console.log('jjnnnnnnnn', isMainApplicant);
     if (isMainApplicant) {
       const currentDate = selectedDate || new Date();
       setSelectingCalendar(false);
-      event.type == 'set' ? setTempDateOfBirth(event.type == 'set' ? moment(currentDate).format('DD-MM-YYYY') : '') : null
-      event.type == 'set' ? setDateofBirth(event.type == 'set' ? moment(currentDate).format('DD-MM-YYYY') : '') : null
-      event.type == 'set' ? setDateofBirthForCalendar(event.type == 'set' ? currentDate : '') : null
+      event.type == 'set'
+        ? setTempDateOfBirth(
+            event.type == 'set' ? moment(currentDate).format('DD-MM-YYYY') : '',
+          )
+        : null;
+      event.type == 'set'
+        ? setDateofBirth(
+            event.type == 'set' ? moment(currentDate).format('DD-MM-YYYY') : '',
+          )
+        : null;
+      event.type == 'set'
+        ? setDateofBirthForCalendar(event.type == 'set' ? currentDate : '')
+        : null;
       setIsChanged(true);
-    }
-    else {
+    } else {
       const currentDate = selectedDate || new Date();
-      var datearray = moment(currentDate).format('YYYY-MM-DD')
-      console.log("datearray", datearray);
-      const age: string = (parseFloat(getDecimalAge(datearray)) + (parseFloat(tenure) / 12)).toFixed(1);
+      var datearray = moment(currentDate).format('YYYY-MM-DD');
+      console.log('datearray', datearray);
+      const age: string = (
+        parseFloat(getDecimalAge(datearray)) +
+        parseFloat(tenure) / 12
+      ).toFixed(1);
 
-      parseFloat(age) >= 68 ? (
-        setSelectingCalendar(false),
-        setDateofBirth(''),
-        setTempDateOfBirth(''),
-        setDateofBirthForCalendar(''),
-        useShowFlashMessage(
-          'warning',
-          `Guarantor age is exceeding the limit`,
-        )) : (
-        setSelectingCalendar(false),
-        event.type == 'set' ? setTempDateOfBirth(event.type == 'set' ? moment(currentDate).format('DD-MM-YYYY') : '') : null,
-        event.type == 'set' ? setDateofBirth(event.type == 'set' ? moment(currentDate).format('DD-MM-YYYY') : '') : null,
-        event.type == 'set' ? setDateofBirthForCalendar(event.type == 'set' ? currentDate : '') : null,
-        setIsChanged(true)
-      )
-
+      parseFloat(age) >= 68
+        ? (setSelectingCalendar(false),
+          setDateofBirth(''),
+          setTempDateOfBirth(''),
+          setDateofBirthForCalendar(''),
+          useShowFlashMessage(
+            'warning',
+            `Guarantor age is exceeding the limit`,
+          ))
+        : (setSelectingCalendar(false),
+          event.type == 'set'
+            ? setTempDateOfBirth(
+                event.type == 'set'
+                  ? moment(currentDate).format('DD-MM-YYYY')
+                  : '',
+              )
+            : null,
+          event.type == 'set'
+            ? setDateofBirth(
+                event.type == 'set'
+                  ? moment(currentDate).format('DD-MM-YYYY')
+                  : '',
+              )
+            : null,
+          event.type == 'set'
+            ? setDateofBirthForCalendar(event.type == 'set' ? currentDate : '')
+            : null,
+          setIsChanged(true));
     }
-
   };
 
   const currentDate = new Date();
@@ -724,40 +771,38 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
 
   const BranchesList: DropdownObject[] = GetBranchesData
     ? GetBranchesData.map(item => ({
-      label: item.branch,
-      value: item.branch,
-    }))
+        label: item.branch,
+        value: item.branch,
+      }))
     : [];
 
   const RefrenceList: DropdownObject[] = GetRefrenceData
     ? GetRefrenceData.map(item => ({
-      label: item.dropdownLabel,
-      value: item.dropdownValue,
-    }))
+        label: item.dropdownLabel,
+        value: item.dropdownValue,
+      }))
     : [];
-
 
   const CustomerProfileList: DropdownObject[] = GetCustomerProfileData
     ? GetCustomerProfileData.map(item => ({
-      label: item.profile,
-      value: item.profile,
-    }))
+        label: item.profile,
+        value: item.profile,
+      }))
     : [];
 
   const ConstitutionList: DropdownObject[] = GetConstitutionData
     ? GetConstitutionData.constitutionMasterList.map(item => ({
-      label: item.constitutionType,
-      value: item.constitutionType,
-    }))
+        label: item.constitutionType,
+        value: item.constitutionType,
+      }))
     : [];
 
   const CustomerTypeList: DropdownObject[] = GetCustomerTypeData
     ? GetCustomerTypeData.map(item => ({
-      label: item.customerType,
-      value: item.customerType,
-    }))
+        label: item.customerType,
+        value: item.customerType,
+      }))
     : [];
-
 
   useEffect(() => {
     if (isOpenConstitution) {
@@ -786,7 +831,7 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
       moment(dateofbirth).isAfter(eighteenYearsAgoMoment) &&
       GetLeadData?.dob
     ) {
-      console.log("mmjjjjjj");
+      console.log('mmjjjjjj');
 
       setDateofBirth(tempdateOfBirth);
     }
@@ -827,18 +872,38 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
     isMainApplicant ? selectedBranch : 'dfsd',
     isMainApplicant ? selectedExistingType : 'dfsd',
     // isMainApplicant ? referredBy : 'dfsd',
-    isMainApplicant &&referredBy && !(referredBy == 'Social Media' || referredBy == 'Website' || referredBy == 'Advertisement') ? referredEmpPhoneNo : 'dfsd',
-    isMainApplicant && referredBy&&  !(referredBy == 'Social Media' || referredBy == 'Website' || referredBy == 'Advertisement') ? referredEmpCode : 'dfsd',
+    isMainApplicant &&
+    referredBy &&
+    !(
+      referredBy == 'Social Media' ||
+      referredBy == 'Website' ||
+      referredBy == 'Advertisement'
+    )
+      ? referredEmpPhoneNo
+      : 'dfsd',
+    isMainApplicant &&
+    referredBy &&
+    !(
+      referredBy == 'Social Media' ||
+      referredBy == 'Website' ||
+      referredBy == 'Advertisement'
+    )
+      ? referredEmpCode
+      : 'dfsd',
   ];
 
   let isActive: boolean = useActive(activeArray);
   let hasError: boolean = isError.some(error => error.hasError === true);
   // console.log("customerType",customerType, CustomerTypeList);
-  console.log("isPreOffer", GetLeadDataGuarantor?.isMale);
+  console.log('isPreOffer', GetLeadDataGuarantor?.isMale);
 
   return (
     <WaveBackground
-      loading={[GetLeadIsLoading, GetApplicantDetailsByAadharIsLoading, getPreApproveOfferIsLoading]}
+      loading={[
+        GetLeadIsLoading,
+        GetApplicantDetailsByAadharIsLoading,
+        getPreApproveOfferIsLoading,
+      ]}
       title={'Lead Registration'}>
       {selectingCalendar && (
         <DateTimePicker
@@ -849,10 +914,8 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
           minimumDate={sixtenYearsAgo}
           mode="date"
           onChange={ondobChange}
-
         />
       )}
-
 
       <LabeledTextInput
         label="Aadhaar Number"
@@ -912,11 +975,11 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
       </View>
 
       <View style={styles.dobContainer}>
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{flexDirection: 'row'}}>
           <Text
             style={[
               styles.labelText,
-              { color: selectingCalendar ? Colors.Black : Colors.LabelGrey },
+              {color: selectingCalendar ? Colors.Black : Colors.LabelGrey},
             ]}>
             Date Of Birth{' '}
           </Text>
@@ -963,19 +1026,29 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
         setErrorFlag={setIsError}
         IsErrorArray={isError}
         isChange={setIsChanged}
-      // mandatory
+        // mandatory
       />
-      <LabelDropdown
+      {/* <LabelDropdown
         label="Gender"
         setSelectedOption={setSelectedGender}
         options={['Male', 'Female']}
         defaultValue={selectedGender}
-        zIndex={isOpenGender ? 1000 : 0}
+        zIndex={isOpenGender ? 1000 : 0}    
         key={isMainApplicant ? 50 : 51}
         open={isOpenGender}
         disabled={GetLeadData?.isMale === true}
         setDropdownOpen={setIsOpenGender}
         setSelectedItem={() => { }}
+        isChange={setIsChanged}
+        mandatory
+      /> */}
+      <LabeledDropdown
+        label="Gender"
+        setSelectedOption={setSelectedGender}
+        options={['Male', 'Female']}
+        defaultValue={selectedGender}
+        disabled={GetLeadData?.isMale === true}
+        bottom
         isChange={setIsChanged}
         mandatory
       />
@@ -999,7 +1072,7 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
           zIndex={isOpenRelation ? 1000 : 0}
           open={isOpenRelation}
           setDropdownOpen={setIsOpenRelation}
-          setSelectedItem={() => { }}
+          setSelectedItem={() => {}}
           isChange={setIsChanged}
           mandatory
         />
@@ -1030,9 +1103,11 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
       <LabeledDropdown
         label="Customer Type"
         setSelectedOption={setCustomerType}
-        options={isMainApplicant ? CustomerTypeList : CustomerTypeList.filter(
-          el => el.value !== 'Unemployed',
-        )}
+        options={
+          isMainApplicant
+            ? CustomerTypeList
+            : CustomerTypeList.filter(el => el.value !== 'Unemployed')
+        }
         defaultValue={customerType}
         bottom
         isChange={setIsChanged}
@@ -1081,7 +1156,7 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
             maxLength={10}
             isChange={setIsChanged}
             mandatory
-          // NumberPad={PANnumber.length >= 5 && PANnumber.length <= 8 ? true : false}
+            // NumberPad={PANnumber.length >= 5 && PANnumber.length <= 8 ? true : false}
           />
         </Animatable.View>
       )}
@@ -1119,12 +1194,9 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
         isChange={setIsChanged}
       />
 
-
-
       <RadioButtonGroup
         heading="Income Status"
-        options={isMainApplicant ?
-          ['Earning', 'Not Earning'] : ['Earning']}
+        options={isMainApplicant ? ['Earning', 'Not Earning'] : ['Earning']}
         key={isMainApplicant ? 33 : 34}
         onChange={setIncomeStatus}
         value={incomeStatus}
@@ -1132,7 +1204,7 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
       />
 
       {
-        // incomeStatus !== 'Unemployed' && 
+        // incomeStatus !== 'Unemployed' &&
         <LabeledTextInput
           label="Income (Monthly)"
           onChange={setMonthlyIncome}
@@ -1144,12 +1216,10 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
           IsErrorArray={isError}
           isChange={setIsChanged}
           mandatory={incomeStatus !== 'Not Earning'}
-        />}
+        />
+      }
 
-
-
-
-      {isMainApplicant &&
+      {isMainApplicant && (
         <RadioButtonGroup
           heading="Do you have a pre-approved offer?"
           options={['Yes', 'No']}
@@ -1157,42 +1227,46 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
           onChange={setIsPreOffer}
           value={isPreOffer}
           isChange={setIsChanged}
-        />}
+        />
+      )}
 
-      {isMainApplicant && isPreOffer == 'Yes' &&
-
+      {isMainApplicant && isPreOffer == 'Yes' && (
         <LabeledDropdown
           label="Select Offer"
           setSelectedOption={setSelectedOffer}
-          options={['MFL-SULB',]}
+          options={['MFL-SULB']}
           defaultValue={selectedOffer}
           bottom
           isChange={setIsChanged}
-        // mandatory
+          // mandatory
         />
-      }
+      )}
 
-      <View style={{ marginVertical: 10 }}>
+      <View style={{marginVertical: 10}}>
         <Button
           text="Get Pre-Approved Offer"
           onPress={() => {
-            getPreApproveOffer.mutateAsync()
+            getPreApproveOffer.mutateAsync();
           }}
           active={selectedOffer ? true : false}
         />
       </View>
 
-     {isMainApplicant&& <LabeledDropdown
-        label="Referred By"
-        setSelectedOption={setReferredBy}
-        options={RefrenceList}
-        defaultValue={referredBy}
-        bottom
-        isChange={setIsChanged}
-        // mandatory
-      />}
+      {isMainApplicant && (
+        <LabeledDropdown
+          label="Referred By"
+          setSelectedOption={setReferredBy}
+          options={RefrenceList}
+          defaultValue={referredBy}
+          bottom
+          isChange={setIsChanged}
+          // mandatory
+        />
+      )}
 
-      {referredBy == ''? null: (referredBy == 'Social Media' || referredBy == 'Website' || referredBy == 'Advertisement' )? null : !isMainApplicant ? null :
+      {referredBy == '' ? null : referredBy == 'Social Media' ||
+        referredBy == 'Website' ||
+        referredBy == 'Advertisement' ? null : !isMainApplicant ? null : (
         <>
           <LabeledTextInput
             label="Referred Employee Mobile Number"
@@ -1218,12 +1292,11 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
             // NumberPad
             mandatory
           />
-        </>}
+        </>
+      )}
 
-      <View style={{ marginHorizontal: 10, marginTop: 20 }}>
-        <Text style={styles.SameAsText}>
-          Job Stability
-        </Text>
+      <View style={{marginHorizontal: 10, marginTop: 20}}>
+        <Text style={styles.SameAsText}>Job Stability</Text>
       </View>
 
       <View
@@ -1233,9 +1306,8 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
           justifyContent: 'space-around',
           alignItems: 'center',
         }}>
-
         <LabeledTextInput
-          label={incomeStatus !== 'Not Earning' ? "Year" : "Year "}
+          label={incomeStatus !== 'Not Earning' ? 'Year' : 'Year '}
           onChange={setJobStabilityYear}
           defaultValue={jobStabilityYear}
           setErrorFlag={setIsError}
@@ -1323,11 +1395,15 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
 
       <Button
         text={isChanged ? 'Proceed' : 'Next'}
-        active={isPreOffer == 'Yes' ? isNextEnable && isActive && !hasError : isActive && !hasError}
+        active={
+          isPreOffer == 'Yes'
+            ? isNextEnable && isActive && !hasError
+            : isActive && !hasError
+        }
         marginVertical={10}
         marginTop={30}
         onPress={() => {
-          console.log("SaveorUpdateLeadRequest", SaveorUpdateLeadRequest);
+          console.log('SaveorUpdateLeadRequest', SaveorUpdateLeadRequest);
 
           if (mobileNumber != alternateContact) {
             GetLead.reset();
@@ -1352,12 +1428,11 @@ const LeadRegistration: FC<LeadRegistrationScreenProps> = ({
                 },
               });
             }
-          }
-          else {
+          } else {
             useShowFlashMessage(
               'warning',
               "Mobile Number and Alternate Contact Number can't be same ",
-            )
+            );
           }
         }}
       />
