@@ -36,8 +36,8 @@ interface EmployeeDetialsProviderProps {
 export const EmployeeDetialsProvider: FC<EmployeeDetialsProviderProps> = ({
   children,
 }: EmployeeDetialsProviderProps) => {
-  const [employeeId, setEmployeeId] = useState<string>('MV81050001');
-  const [employeeName, setEmployeeName] = useState<string>('Manoj');
+  const [employeeId, setEmployeeId] = useState<string>('');
+  const [employeeName, setEmployeeName] = useState<string>('');
   const [roleDescription, setRoleDescription] = useState<string>('');
 
   const SaveEmployeeId = (employeeId: string) => {
